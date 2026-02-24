@@ -3,14 +3,15 @@
 // ============================================================
 
 const App = (() => {
-    const pages = ['landing', 'diagnosis', 'result', 'education', 'quiz', 'brokers'];
+    const pages = ['landing', 'empathy', 'diagnosis', 'result', 'education', 'quiz', 'stories', 'brokers'];
     let currentPage = 'landing';
     let userState = {
         diagnosisAnswers: {},
         riskType: null,
         educationCompleted: false,
         quizScore: 0,
-        badges: []
+        badges: [],
+        worries: []
     };
 
     function init() {
@@ -142,11 +143,12 @@ const App = (() => {
 
     function canVisitPage(page) {
         const idx = pages.indexOf(page);
-        if (idx <= 1) return true; // Landing & diagnosis always accessible
-        if (idx === 2 && userState.riskType !== null) return true;
+        if (idx <= 2) return true; // Landing, empathy, diagnosis always accessible
         if (idx === 3 && userState.riskType !== null) return true;
         if (idx === 4 && userState.riskType !== null) return true;
-        if (idx === 5) return true; // Brokers always accessible
+        if (idx === 5 && userState.riskType !== null) return true;
+        if (idx === 6 && userState.riskType !== null) return true;
+        if (idx === 7) return true; // Brokers always accessible
         return false;
     }
 
@@ -159,6 +161,10 @@ const App = (() => {
     // --- Buttons ---
     function setupButtons() {
         document.getElementById('btn-start')?.addEventListener('click', () => {
+            navigateTo('empathy');
+        });
+
+        document.getElementById('btn-to-diagnosis')?.addEventListener('click', () => {
             navigateTo('diagnosis');
             Diagnosis.start();
         });
@@ -173,17 +179,116 @@ const App = (() => {
             Quiz.init();
         });
 
+        document.getElementById('btn-to-brokers')?.addEventListener('click', () => {
+            navigateTo('brokers');
+            Quiz.renderBrokers();
+            updateReadinessMeter();
+        });
+
         document.getElementById('btn-restart')?.addEventListener('click', () => {
             userState = {
                 diagnosisAnswers: {},
                 riskType: null,
                 educationCompleted: false,
                 quizScore: 0,
-                badges: []
+                badges: [],
+                worries: []
             };
             sessionStorage.removeItem('financeSimState');
             navigateTo('landing');
         });
+
+        // Empathy cards interaction
+        setupEmpathyCards();
+    }
+
+    // --- Empathy Cards ---
+    function setupEmpathyCards() {
+        const cards = document.querySelectorAll('.empathy-card');
+        let selectedCount = 0;
+        if (!userState.worries) userState.worries = [];
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('selected');
+                const worry = card.dataset.worry;
+                if (card.classList.contains('selected')) {
+                    if (!userState.worries.includes(worry)) userState.worries.push(worry);
+                    selectedCount++;
+                } else {
+                    userState.worries = userState.worries.filter(w => w !== worry);
+                    selectedCount--;
+                }
+
+                // After selecting at least 1 card, show encouragement
+                if (selectedCount >= 1) {
+                    document.getElementById('empathy-encouragement').style.display = 'block';
+                    document.getElementById('btn-to-diagnosis').style.display = '';
+                }
+            });
+        });
+    }
+
+    // --- Crash Simulation ---
+    function renderCrashSimulation(monthly, period) {
+        const container = document.getElementById('crash-timeline');
+        if (!container) return;
+
+        const crashes = [
+            { name: 'コロナショック', year: 2020, drop: -34, recovery: '約6ヶ月', emoji: '🦠' },
+            { name: 'リーマンショック', year: 2008, drop: -53, recovery: '約4年', emoji: '📉' },
+            { name: 'ブラックマンデー', year: 1987, drop: -22, recovery: '約2年', emoji: '⚡' }
+        ];
+
+        const totalInvested = monthly * 12 * Math.min(period, 3);
+
+        container.innerHTML = crashes.map(c => {
+            const lostAmount = Math.round(totalInvested * Math.abs(c.drop) / 100);
+            return `
+                <div class="crash-event">
+                    <div class="crash-event-header">
+                        <span>${c.emoji} ${c.name}（${c.year}年）</span>
+                        <span class="crash-drop">${c.drop}%</span>
+                    </div>
+                    <div class="crash-event-body">
+                        <div class="crash-bar">
+                            <div class="crash-bar-fill" style="width:${100 + c.drop}%"></div>
+                        </div>
+                        <div class="crash-recovery">🔄 回復期間: <strong>${c.recovery}</strong></div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // --- Readiness Meter ---
+    function updateReadinessMeter() {
+        let score = 0;
+        if (userState.worries && userState.worries.length > 0) score += 15;
+        if (userState.riskType !== null) score += 25;
+        if (userState.educationCompleted) score += 25;
+        if (userState.quizScore >= 3) score += 20;
+        if (userState.quizScore >= 5) score += 15;
+
+        const bar = document.getElementById('readiness-bar');
+        const label = document.getElementById('readiness-label');
+        const msg = document.getElementById('readiness-msg');
+        if (!bar || !label || !msg) return;
+
+        setTimeout(() => {
+            bar.style.width = score + '%';
+            label.textContent = score + '%';
+        }, 300);
+
+        if (score >= 80) {
+            msg.textContent = '🎉 準備バッチリ！あとは口座を作るだけ！';
+        } else if (score >= 50) {
+            msg.textContent = '💪 いい調子！もう少しで準備完了です';
+        } else if (score >= 20) {
+            msg.textContent = '🌱 順調に学習中。もっとコンテンツを見てみよう';
+        } else {
+            msg.textContent = '📖 診断を始めて投資準備度を上げよう！';
+        }
     }
 
     // --- Background Particles ---
@@ -308,7 +413,7 @@ const App = (() => {
         requestAnimationFrame(update);
     }
 
-    return { init, navigateTo, getState, setState, addBadge, fireConfetti, formatCurrency, formatCurrencyExact, animateCountUp, pages };
+    return { init, navigateTo, getState, setState, addBadge, fireConfetti, formatCurrency, formatCurrencyExact, animateCountUp, renderCrashSimulation, updateReadinessMeter, pages };
 })();
 
 // Initialize on DOM ready

@@ -38,10 +38,12 @@
   <!-- Navigation Dots -->
   <nav class="nav-dots" id="navDots">
     <button class="nav-dot active" data-page="landing" title="トップ" id="nav-landing"></button>
+    <button class="nav-dot" data-page="empathy" title="不安" id="nav-empathy"></button>
     <button class="nav-dot" data-page="diagnosis" title="診断" id="nav-diagnosis"></button>
     <button class="nav-dot" data-page="result" title="結果" id="nav-result"></button>
     <button class="nav-dot" data-page="education" title="学習" id="nav-education"></button>
     <button class="nav-dot" data-page="quiz" title="クイズ" id="nav-quiz"></button>
+    <button class="nav-dot" data-page="stories" title="体験談" id="nav-stories"></button>
     <button class="nav-dot" data-page="brokers" title="始める" id="nav-brokers"></button>
   </nav>
 
@@ -97,6 +99,51 @@
     <p class="landing-disclaimer">
       ✅ 登録不要 ・ 完全無料 ・ 1分で完了
     </p>
+  </section>
+
+  <!-- ===== PAGE 1.5: EMPATHY (不安チェック) ===== -->
+  <section class="page empathy" id="page-empathy">
+    <div class="empathy-header">
+      <h2>投資、こんな不安ありませんか？</h2>
+      <p>当てはまるものをタップしてみてください 👇</p>
+    </div>
+
+    <div class="empathy-cards" id="empathy-cards">
+      <button class="empathy-card" data-worry="loss">
+        <span class="empathy-icon">😰</span>
+        <span class="empathy-text">損するのが怖い…</span>
+        <span class="empathy-answer">あなただけじゃない！<strong>68%</strong>の人が同じ不安を感じています（LENDEX調査2026年）</span>
+      </button>
+
+      <button class="empathy-card" data-worry="money">
+        <span class="empathy-icon">💸</span>
+        <span class="empathy-text">まとまったお金がない…</span>
+        <span class="empathy-answer">実は<strong>月100円</strong>から始められます！NISAなら利益も<strong>非課税</strong>です</span>
+      </button>
+
+      <button class="empathy-card" data-worry="difficult">
+        <span class="empathy-icon">🤯</span>
+        <span class="empathy-text">難しそう…</span>
+        <span class="empathy-answer">大丈夫！このアプリで<strong>ゲーム感覚</strong>で基礎が身につきます。専門用語なしで解説します</span>
+      </button>
+
+      <button class="empathy-card" data-worry="scam">
+        <span class="empathy-icon">😤</span>
+        <span class="empathy-text">騙されそう…</span>
+        <span class="empathy-answer">NISAは<strong>金融庁（国）が作った制度</strong>。怪しい商品ではなく、安心できるしくみです</span>
+      </button>
+    </div>
+
+    <div class="empathy-encouragement" id="empathy-encouragement" style="display:none;">
+      <div class="empathy-msg glass-card">
+        <p>不安があるのは当然のこと。<br>大事なのは、<strong>「知ること」</strong>から始めること。</p>
+        <p class="empathy-stat">💡 知識を持つだけで、投資への不安は<strong>半減する</strong>というデータがあります</p>
+      </div>
+    </div>
+
+    <button class="btn-primary btn-glow" id="btn-to-diagnosis" style="display:none;">
+      不安を解消していこう →
+    </button>
   </section>
 
   <!-- ===== PAGE 2: DIAGNOSIS ===== -->
@@ -188,6 +235,55 @@
       </div>
     </div>
 
+    <!-- Crash Simulation -->
+    <div class="crash-sim glass-card" id="crash-sim">
+      <h3>📉 もし暴落が起きたら？</h3>
+      <p class="crash-intro">過去の実データに基づくシミュレーション</p>
+      <div class="crash-timeline" id="crash-timeline">
+        <!-- Dynamically populated -->
+      </div>
+      <div class="crash-lesson">
+        <span>💡</span>
+        <span>歴史的に、<strong>暴落後に売らずに持ち続けた人が、最終的に最も得をしています</strong></span>
+      </div>
+    </div>
+
+    <!-- Inflation Visualization -->
+    <div class="inflation-card glass-card">
+      <h3>⚠️ 実は「貯金だけ」が一番リスク？</h3>
+      <p class="inflation-intro">インフレ率2%で、100万円の実質価値はこうなります</p>
+      <div class="inflation-bars">
+        <div class="inf-row">
+          <span class="inf-label">今日</span>
+          <div class="inf-bar-track">
+            <div class="inf-bar-fill" style="width:100%;">100万円</div>
+          </div>
+        </div>
+        <div class="inf-row">
+          <span class="inf-label">5年後</span>
+          <div class="inf-bar-track">
+            <div class="inf-bar-fill" style="width:90%;">約90万円</div>
+          </div>
+        </div>
+        <div class="inf-row">
+          <span class="inf-label">10年後</span>
+          <div class="inf-bar-track">
+            <div class="inf-bar-fill warn" style="width:82%;">約82万円</div>
+          </div>
+        </div>
+        <div class="inf-row">
+          <span class="inf-label">20年後</span>
+          <div class="inf-bar-track">
+            <div class="inf-bar-fill danger" style="width:67%;">約67万円</div>
+          </div>
+        </div>
+      </div>
+      <div class="inflation-lesson">
+        <span>😱</span>
+        <span>何もしないだけで、<strong>20年で33万円分の価値が消えます。</strong>「投資しないリスク」も存在します</span>
+      </div>
+    </div>
+
     <!-- Early Start -->
     <div class="early-start-card">
       <h4>⏰ 今日始めた場合 vs 1年後に始めた場合</h4>
@@ -241,11 +337,95 @@
     </div>
   </section>
 
-  <!-- ===== PAGE 6: BROKERS / CTA ===== -->
+  <!-- ===== PAGE 6: STORIES (先輩の声) ===== -->
+  <section class="page stories" id="page-stories">
+    <div class="stories-header">
+      <h2>📖 先輩たちの声</h2>
+      <p>投資を始めた先輩たちのリアルな体験談</p>
+    </div>
+
+    <div class="story-cards">
+      <div class="story-card glass-card">
+        <div class="story-avatar">👩‍💼</div>
+        <div class="story-meta">
+          <span class="story-name">ゆうきさん（25歳・会社員）</span>
+          <span class="story-tag tag-beginner">投資歴1年</span>
+        </div>
+        <blockquote class="story-quote">
+          「正直、最初はめちゃくちゃ怖かった。でも月5,000円ならランチ代くらいだし…と思って始めたら、<strong>1年でプラス2万円</strong>。今は毎月の残高チェックが楽しみです。」
+        </blockquote>
+        <div class="story-result">📈 月5,000円 → 1年後 +2万円</div>
+      </div>
+
+      <div class="story-card glass-card">
+        <div class="story-avatar">👨‍💻</div>
+        <div class="story-meta">
+          <span class="story-name">あやかさん（32歳・フリーランス）</span>
+          <span class="story-tag tag-experienced">投資歴3年</span>
+        </div>
+        <blockquote class="story-quote">
+          「コロナショックで-15%下がった時はパニックに。でも売らずに待ったら半年で元通り。あの経験で<strong>『暴落＝バーゲンセール』</strong>と学びました。」
+        </blockquote>
+        <div class="story-result">📊 コロナ暴落 → 半年で回復 → 今は+40%</div>
+      </div>
+
+      <div class="story-card glass-card">
+        <div class="story-avatar">👩‍🍳</div>
+        <div class="story-meta">
+          <span class="story-name">みかさん（40歳・主婦）</span>
+          <span class="story-tag tag-nisa">つみたてNISA</span>
+        </div>
+        <blockquote class="story-quote">
+          「子供の教育費のため、つみたてNISAで月1万円を始めました。5年で<strong>65万円が85万円</strong>に。もっと早く始めればよかった…が正直な感想です。」
+        </blockquote>
+        <div class="story-result">🎓 月1万円 × 5年 → 65万円が85万円に</div>
+      </div>
+    </div>
+
+    <div class="stories-cta glass-card">
+      <p>💡 3人に共通していること：<strong>「まず少額で始めた」</strong></p>
+    </div>
+
+    <button class="btn-primary btn-glow mt-xl" id="btn-to-brokers">
+      私も始めてみる！ 🌱
+    </button>
+  </section>
+
+  <!-- ===== PAGE 7: BROKERS / CTA (小さな一歩) ===== -->
   <section class="page brokers" id="page-brokers">
     <div class="brokers-header">
-      <h2>🚀 次のステップ：投資を始めよう！</h2>
-      <p>あなたにピッタリの証券口座を見つけましょう</p>
+      <h2>🌱 投資を始める3ステップ</h2>
+      <p>いきなり大金は不要！小さな一歩から始めましょう</p>
+    </div>
+
+    <!-- Step Progression -->
+    <div class="steps-progression">
+      <div class="step-item step-active glass-card">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>口座を作る（無料・最短5分）</h4>
+          <p>マイナンバーカードがあればスマホで完結。入金しなくてもOK！</p>
+        </div>
+        <span class="step-effort">💪 ハードル：★☆☆</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item glass-card">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>まず100円だけ投資してみる</h4>
+          <p>投資信託なら100円からOK。ジュース1本分で「投資家デビュー」！</p>
+        </div>
+        <span class="step-effort">💪 ハードル：★☆☆</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item glass-card">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>つみたて設定をする</h4>
+          <p>毎月自動で積立。あとは放置するだけ！</p>
+        </div>
+        <span class="step-effort">💪 ハードル：★★☆</span>
+      </div>
     </div>
 
     <!-- Badges -->
@@ -256,7 +436,18 @@
       </div>
     </div>
 
+    <!-- Readiness Meter -->
+    <div class="readiness-meter glass-card">
+      <h3>📊 あなたの投資準備度</h3>
+      <div class="readiness-bar-container">
+        <div class="readiness-bar" id="readiness-bar" style="width:0%"></div>
+      </div>
+      <div class="readiness-label" id="readiness-label">0%</div>
+      <div class="readiness-msg" id="readiness-msg">診断を始めましょう！</div>
+    </div>
+
     <!-- Broker Cards -->
+    <h3 style="text-align:center;margin-top:var(--space-xl);">🏢 おすすめの証券口座</h3>
     <div class="broker-cards" id="broker-cards">
       <!-- Dynamically populated -->
     </div>

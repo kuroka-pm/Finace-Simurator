@@ -122,6 +122,9 @@ const Simulator = (() => {
 
         // Render chart
         renderChart(labels, principalData, compoundData);
+
+        // Render crash simulation
+        App.renderCrashSimulation(monthly, years);
     }
 
     function renderChart(labels, principalData, compoundData) {
