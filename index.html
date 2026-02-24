@@ -47,36 +47,47 @@
 
   <!-- ===== PAGE 1: LANDING ===== -->
   <section class="page landing active" id="page-landing">
-    <div class="landing-icon">
-      <div class="landing-icon-ring"></div>
-      <span>💰</span>
+    <div class="landing-hero">
+      <div class="landing-icon">
+        <div class="landing-icon-ring"></div>
+        <span>💰</span>
+      </div>
+      <h1 id="landing-title"></h1>
+      <p class="subtitle">たった<strong>1分</strong>の診断で、あなたの未来の資産がわかる！</p>
     </div>
-    <h1>あなたの将来、<br>見てみませんか？</h1>
-    <p class="subtitle">たった1分の無料診断で、複利の力を体感しよう。<br>投資の「怖い」を「楽しい」に変えます。</p>
-    <div class="landing-stats">
-      <div class="stat-item">
-        <span class="stat-number">43.2</span><span class="stat-unit">%</span>
-        <span class="stat-label">が損失を恐れて投資を始められない</span>
+
+    <!-- Interactive Money Demo -->
+    <div class="money-demo glass-card">
+      <div class="money-demo-header">
+        <span>💡</span>
+        <span>もし毎月<strong>3万円</strong>を20年間積み立てたら…</span>
+      </div>
+      <div class="money-demo-result">
+        <div class="money-demo-row">
+          <span class="money-label">貯金だけ 🏦</span>
+          <span class="money-value boring" id="demo-saving">720万円</span>
+        </div>
+        <div class="money-demo-vs">VS</div>
+        <div class="money-demo-row highlight-row">
+          <span class="money-label">複利で運用 📈</span>
+          <span class="money-value exciting" id="demo-compound">1,233万円 🎉</span>
+        </div>
+        <div class="money-demo-diff">
+          差額 <strong id="demo-diff">+513万円</strong> もお得！
+        </div>
       </div>
     </div>
 
-    <div class="landing-features">
-      <div class="feature-item">
-        <span class="feature-icon">🎯</span>
-        <span>6つの質問であなたに合ったプランを提案</span>
-      </div>
-      <div class="feature-item">
-        <span class="feature-icon">📊</span>
-        <span>複利の成長をグラフで直感的にシミュレーション</span>
-      </div>
-      <div class="feature-item">
-        <span class="feature-icon">🎮</span>
-        <span>クイズで楽しく金融知識を身につけよう</span>
-      </div>
+    <!-- Quick Features -->
+    <div class="feature-chips">
+      <div class="feature-chip">🎯 あなた専用プラン</div>
+      <div class="feature-chip">📊 リアルタイム計算</div>
+      <div class="feature-chip">🎮 クイズで学ぶ</div>
+      <div class="feature-chip">🏅 バッジ集め</div>
     </div>
 
-    <button class="btn-primary btn-glow" id="btn-start">
-      <span>無料で診断スタート</span>
+    <button class="btn-primary btn-glow btn-large" id="btn-start">
+      <span>さっそく始める！</span>
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="margin-left:4px;">
         <path d="M4 10h12m-4-4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
           stroke-linejoin="round" />
@@ -84,7 +95,7 @@
     </button>
 
     <p class="landing-disclaimer">
-      ✅ 個人情報の入力は一切不要 ・ 完全無料
+      ✅ 登録不要 ・ 完全無料 ・ 1分で完了
     </p>
   </section>
 

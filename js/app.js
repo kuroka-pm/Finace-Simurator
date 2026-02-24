@@ -17,6 +17,11 @@ const App = (() => {
         // Show loading screen then dismiss
         setTimeout(() => {
             document.getElementById('loading-screen')?.classList.add('hidden');
+            // Start landing animations after loading
+            setTimeout(() => {
+                startTypewriter();
+                animateMoneyDemo();
+            }, 300);
         }, 1400);
 
         createParticles();
@@ -27,6 +32,72 @@ const App = (() => {
         if (saved) {
             try { userState = JSON.parse(saved); } catch (e) { }
         }
+    }
+
+    // --- Typewriter Effect ---
+    function startTypewriter() {
+        const el = document.getElementById('landing-title');
+        if (!el) return;
+        const texts = [
+            'お金、増やしてみない？',
+            'あなたの未来を\nシミュレーション！',
+            '複利の力、\n体感してみよう 💪'
+        ];
+        let textIdx = 0;
+        let charIdx = 0;
+        let isDeleting = false;
+
+        function tick() {
+            const current = texts[textIdx];
+            const displayed = current.substring(0, charIdx);
+            el.innerHTML = displayed.replace(/\n/g, '<br>') + '<span class="typewriter-cursor"></span>';
+
+            if (!isDeleting && charIdx < current.length) {
+                charIdx++;
+                setTimeout(tick, 80 + Math.random() * 40);
+            } else if (!isDeleting && charIdx === current.length) {
+                setTimeout(() => { isDeleting = true; tick(); }, 2500);
+            } else if (isDeleting && charIdx > 0) {
+                charIdx--;
+                setTimeout(tick, 30);
+            } else {
+                isDeleting = false;
+                textIdx = (textIdx + 1) % texts.length;
+                setTimeout(tick, 400);
+            }
+        }
+        tick();
+    }
+
+    // --- Money Demo Animation ---
+    function animateMoneyDemo() {
+        const savingEl = document.getElementById('demo-saving');
+        const compoundEl = document.getElementById('demo-compound');
+        const diffEl = document.getElementById('demo-diff');
+        if (!savingEl || !compoundEl || !diffEl) return;
+
+        const saving = 7200000;
+        const compound = 12330000;
+        const diff = compound - saving;
+        const duration = 1500;
+        const startTime = performance.now();
+
+        function update(now) {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+
+            const s = Math.round(saving * eased);
+            const c = Math.round(compound * eased);
+            const d = Math.round(diff * eased);
+
+            savingEl.textContent = Math.round(s / 10000) + '\u4E07\u5186';
+            compoundEl.textContent = Math.round(c / 10000).toLocaleString() + '\u4E07\u5186 \uD83C\uDF89';
+            diffEl.textContent = '+' + Math.round(d / 10000) + '\u4E07\u5186';
+
+            if (progress < 1) requestAnimationFrame(update);
+        }
+        requestAnimationFrame(update);
     }
 
     // --- Page Navigation ---
