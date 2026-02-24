@@ -61,9 +61,61 @@
   <!-- ===== PAGE 1: LANDING ===== -->
   <section class="page landing active" id="page-landing">
     <div class="landing-hero">
-      <div class="landing-icon">
-        <div class="landing-icon-ring"></div>
-        <span>💰</span>
+      <div class="landing-illustration">
+        <svg viewBox="0 0 200 200" width="180" height="180" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="coinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FFD54F" />
+              <stop offset="100%" stop-color="#FB923C" />
+            </linearGradient>
+            <linearGradient id="plantGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stop-color="#34d399" />
+              <stop offset="100%" stop-color="#4f8cff" />
+            </linearGradient>
+            <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#4f8cff" stop-opacity="0.3" />
+              <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+          <!-- Glow circle -->
+          <circle cx="100" cy="100" r="90" fill="url(#glowGrad)">
+            <animate attributeName="r" values="85;95;85" dur="3s" repeatCount="indefinite" />
+          </circle>
+          <!-- Coin -->
+          <ellipse cx="100" cy="140" rx="38" ry="12" fill="url(#coinGrad)" opacity="0.9" />
+          <ellipse cx="100" cy="135" rx="38" ry="12" fill="url(#coinGrad)" />
+          <text x="100" y="140" text-anchor="middle" font-size="16" font-weight="bold" fill="#7c4a00">¥</text>
+          <!-- Plant stem -->
+          <path d="M100,130 Q100,90 95,70" stroke="url(#plantGrad)" stroke-width="3" fill="none" stroke-linecap="round">
+            <animate attributeName="d" values="M100,130 Q100,110 100,130;M100,130 Q100,90 95,70" dur="1.5s"
+              fill="freeze" />
+          </path>
+          <!-- Leaves -->
+          <path d="M95,85 Q80,75 85,65 Q95,70 95,85Z" fill="#34d399" opacity="0.9">
+            <animate attributeName="opacity" values="0;0.9" dur="1.5s" fill="freeze" />
+          </path>
+          <path d="M97,72 Q110,58 115,65 Q105,72 97,72Z" fill="#4f8cff" opacity="0.9">
+            <animate attributeName="opacity" values="0;0.9" dur="2s" fill="freeze" />
+          </path>
+          <!-- Sparkles -->
+          <circle cx="75" cy="55" r="2" fill="#FFD54F">
+            <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="130" cy="50" r="1.5" fill="#8b5cf6">
+            <animate attributeName="opacity" values="0;1;0" dur="2.5s" repeatCount="indefinite" begin="0.5s" />
+          </circle>
+          <circle cx="120" cy="75" r="1.5" fill="#34d399">
+            <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="1s" />
+          </circle>
+          <!-- Rising arrow -->
+          <path d="M60,110 Q80,80 100,65 Q120,50 140,35" stroke="rgba(79,140,255,0.4)" stroke-width="1.5" fill="none"
+            stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" values="10;0" dur="1s" repeatCount="indefinite" />
+          </path>
+          <polygon points="140,30 145,40 135,38" fill="#4f8cff" opacity="0.6">
+            <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2s" repeatCount="indefinite" />
+          </polygon>
+        </svg>
       </div>
       <h1 id="landing-title"></h1>
       <p class="subtitle">たった<strong>1分</strong>の診断で、あなたの未来の資産がわかる！</p>
@@ -125,6 +177,32 @@
   <!-- ===== PAGE 1.5: EMPATHY (不安チェック) ===== -->
   <section class="page empathy" id="page-empathy">
     <div class="empathy-header">
+      <svg class="empathy-illustration" viewBox="0 0 160 120" width="160" height="120"
+        xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#4f8cff" />
+            <stop offset="100%" stop-color="#8b5cf6" />
+          </linearGradient>
+        </defs>
+        <!-- Shield -->
+        <path d="M80,15 L120,30 L120,65 Q120,95 80,110 Q40,95 40,65 L40,30 Z" fill="none" stroke="url(#shieldGrad)"
+          stroke-width="2" opacity="0.6">
+          <animate attributeName="opacity" values="0.4;0.8;0.4" dur="3s" repeatCount="indefinite" />
+        </path>
+        <!-- Heart -->
+        <path d="M80,50 Q80,35 68,35 Q55,35 55,50 Q55,65 80,80 Q105,65 105,50 Q105,35 92,35 Q80,35 80,50Z"
+          fill="url(#shieldGrad)" opacity="0.3">
+          <animate attributeName="opacity" values="0.2;0.4;0.2" dur="2s" repeatCount="indefinite" />
+        </path>
+        <!-- Sparkles -->
+        <circle cx="30" cy="40" r="2" fill="#34d399" opacity="0.6">
+          <animate attributeName="cy" values="42;38;42" dur="2s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="130" cy="35" r="1.5" fill="#FFD54F" opacity="0.6">
+          <animate attributeName="cy" values="37;33;37" dur="2.5s" repeatCount="indefinite" />
+        </circle>
+      </svg>
       <h2>投資、こんな不安ありませんか？</h2>
       <p>当てはまるものをタップしてみてください 👇</p>
     </div>
@@ -257,7 +335,7 @@
     </div>
 
     <!-- Crash Simulation -->
-    <div class="crash-sim glass-card" id="crash-sim">
+    <div class="crash-sim glass-card reveal" id="crash-sim">
       <h3>📉 もし暴落が起きたら？</h3>
       <p class="crash-intro">過去の実データに基づくシミュレーション</p>
       <div class="crash-timeline" id="crash-timeline">
@@ -270,7 +348,7 @@
     </div>
 
     <!-- Inflation Visualization -->
-    <div class="inflation-card glass-card">
+    <div class="inflation-card glass-card reveal">
       <h3>⚠️ 実は「貯金だけ」が一番リスク？</h3>
       <p class="inflation-intro">インフレ率2%で、100万円の実質価値はこうなります</p>
       <div class="inflation-bars">
@@ -306,7 +384,7 @@
     </div>
 
     <!-- Life Goals -->
-    <div class="life-goals glass-card">
+    <div class="life-goals glass-card reveal">
       <h3>🎯 あなたの投資、何のため？</h3>
       <p class="life-goals-intro">目標を決めると、投資がもっと楽しくなります</p>
       <div class="life-goals-grid" id="life-goals-grid">
@@ -373,6 +451,38 @@
   <!-- ===== PAGE 6: STORIES (先輩の声) ===== -->
   <section class="page stories" id="page-stories">
     <div class="stories-header">
+      <svg class="stories-illustration" viewBox="0 0 200 100" width="200" height="100"
+        xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="personGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#4f8cff" />
+            <stop offset="100%" stop-color="#34d399" />
+          </linearGradient>
+        </defs>
+        <!-- Person 1 -->
+        <circle cx="50" cy="35" r="12" fill="#F06292" opacity="0.7" />
+        <rect x="38" y="50" width="24" height="30" rx="8" fill="#F06292" opacity="0.4" />
+        <!-- Person 2 -->
+        <circle cx="100" cy="30" r="14" fill="url(#personGrad)" opacity="0.7" />
+        <rect x="86" y="47" width="28" height="33" rx="9" fill="url(#personGrad)" opacity="0.4" />
+        <!-- Person 3 -->
+        <circle cx="150" cy="35" r="12" fill="#FFD54F" opacity="0.7" />
+        <rect x="138" y="50" width="24" height="30" rx="8" fill="#FFD54F" opacity="0.4" />
+        <!-- Connection lines -->
+        <line x1="62" y1="45" x2="86" y2="40" stroke="rgba(79,140,255,0.3)" stroke-width="1" stroke-dasharray="3,3">
+          <animate attributeName="stroke-dashoffset" values="6;0" dur="1.5s" repeatCount="indefinite" />
+        </line>
+        <line x1="114" y1="40" x2="138" y2="45" stroke="rgba(52,211,153,0.3)" stroke-width="1" stroke-dasharray="3,3">
+          <animate attributeName="stroke-dashoffset" values="6;0" dur="1.5s" repeatCount="indefinite" />
+        </line>
+        <!-- Speech bubbles -->
+        <rect x="35" y="10" width="20" height="12" rx="4" fill="rgba(240,98,146,0.2)" />
+        <text x="45" y="19" text-anchor="middle" font-size="8">📈</text>
+        <rect x="87" y="5" width="22" height="12" rx="4" fill="rgba(79,140,255,0.2)" />
+        <text x="98" y="14" text-anchor="middle" font-size="8">🌟</text>
+        <rect x="138" y="10" width="20" height="12" rx="4" fill="rgba(255,213,79,0.2)" />
+        <text x="148" y="19" text-anchor="middle" font-size="8">💪</text>
+      </svg>
       <h2>📖 先輩たちの声</h2>
       <p>投資を始めた先輩たちのリアルな体験談</p>
     </div>

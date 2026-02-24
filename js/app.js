@@ -37,6 +37,17 @@ const App = (() => {
             try { userState = JSON.parse(saved); } catch (e) { }
         }
         updateLevelWidget();
+
+        // Scroll-reveal observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     }
 
     // --- Typewriter Effect ---
