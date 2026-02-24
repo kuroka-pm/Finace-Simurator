@@ -2,7 +2,7 @@
 // Service Worker - 投資シミュレーター PWA
 // ============================================================
 
-const CACHE_NAME = 'finance-sim-v2';
+const CACHE_NAME = 'finance-sim-v3';
 const ASSETS = [
     '/',
     '/index.html',

@@ -2438,8 +2438,9 @@ input[type="range"]::-moz-range-thumb {
 
 .step-item {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
-  gap: var(--space-md);
+  gap: var(--space-sm) var(--space-md);
   padding: var(--space-md) var(--space-lg);
   position: relative;
   opacity: 0.7;
@@ -2480,9 +2481,9 @@ input[type="range"]::-moz-range-thumb {
 .step-effort {
   font-size: 0.7rem;
   color: var(--text-tertiary);
-  position: absolute;
-  right: var(--space-md);
-  top: var(--space-md);
+  width: 100%;
+  text-align: right;
+  margin-top: calc(-1 * var(--space-xs));
 }
 
 .step-connector {
