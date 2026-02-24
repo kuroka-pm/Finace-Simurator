@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>投資シミュレーター｜初心者が複利の力を無料で体験</title>
+  <meta name="description" content="投資初心者のための無料シミュレーター。簡単な診断でリスク許容度を判定し、複利の力を視覚的に体感。NISAや積立投資の基礎を楽しく学べます。">
+  <meta name="keywords" content="投資 シミュレーション, 複利 計算, NISA, 積立投資, 投資 初心者, 資産形成">
+  <meta property="og:title" content="投資シミュレーター｜複利の力を無料で体験">
+  <meta property="og:description" content="たった1分の診断で、あなたの未来の資産をシミュレーション。投資の「怖い」を「楽しい」に変えます。">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Animated Background Particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Navigation Dots -->
+  <nav class="nav-dots" id="navDots">
+    <button class="nav-dot active" data-page="landing" title="トップ" id="nav-landing"></button>
+    <button class="nav-dot" data-page="diagnosis" title="診断" id="nav-diagnosis"></button>
+    <button class="nav-dot" data-page="result" title="結果" id="nav-result"></button>
+    <button class="nav-dot" data-page="education" title="学習" id="nav-education"></button>
+    <button class="nav-dot" data-page="quiz" title="クイズ" id="nav-quiz"></button>
+    <button class="nav-dot" data-page="brokers" title="始める" id="nav-brokers"></button>
+  </nav>
+
+  <!-- ===== PAGE 1: LANDING ===== -->
+  <section class="page landing active" id="page-landing">
+    <div class="landing-icon">💰</div>
+    <h1>あなたの将来、<br>見てみませんか？</h1>
+    <p class="subtitle">たった1分の無料診断で、複利の力を体感しよう。投資の「怖い」を「楽しい」に変えます。</p>
+
+    <div class="landing-features">
+      <div class="feature-item">
+        <span class="feature-icon">🎯</span>
+        <span>6つの質問であなたに合ったプランを提案</span>
+      </div>
+      <div class="feature-item">
+        <span class="feature-icon">📊</span>
+        <span>複利の成長をグラフで直感的にシミュレーション</span>
+      </div>
+      <div class="feature-item">
+        <span class="feature-icon">🎮</span>
+        <span>クイズで楽しく金融知識を身につけよう</span>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="btn-start">
+      無料で診断スタート →
+    </button>
+
+    <p style="font-size:0.75rem;color:var(--text-tertiary);margin-top:var(--space-sm);">
+      ※ 個人情報の入力は一切不要です
+    </p>
+  </section>
+
+  <!-- ===== PAGE 2: DIAGNOSIS ===== -->
+  <section class="page diagnosis" id="page-diagnosis">
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" id="diagnosis-progress" style="width: 0%"></div>
+      </div>
+      <div class="progress-text">
+        <span id="progress-step">質問 1 / 6</span>
+        <span id="progress-percent">0%</span>
+      </div>
+    </div>
+
+    <div class="question-card" id="question-area">
+      <!-- Dynamically populated -->
+    </div>
+  </section>
+
+  <!-- ===== PAGE 3: RESULT / SIMULATOR ===== -->
+  <section class="page result" id="page-result">
+    <div class="result-header">
+      <h2>あなたの診断結果</h2>
+      <div class="result-type">
+        <span class="result-type-icon" id="result-icon"></span>
+        <span class="result-type-name" id="result-name"></span>
+      </div>
+      <p class="result-description" id="result-description"></p>
+    </div>
+
+    <!-- Allocation -->
+    <div class="glass-card allocation-section">
+      <h3>📊 推奨ポートフォリオ配分</h3>
+      <div class="allocation-bars" id="allocation-bars">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
+
+    <!-- Simulator -->
+    <div class="glass-card simulator-section">
+      <h3>📈 複利シミュレーション</h3>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-label">毎月の積立額</span>
+          <span class="slider-value" id="val-monthly"></span>
+        </div>
+        <input type="range" id="slider-monthly" min="5000" max="100000" step="5000" value="20000">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-label">投資期間</span>
+          <span class="slider-value" id="val-period"></span>
+        </div>
+        <input type="range" id="slider-period" min="5" max="40" step="1" value="20">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-label">期待年利</span>
+          <span class="slider-value" id="val-rate"></span>
+        </div>
+        <input type="range" id="slider-rate" min="1" max="10" step="0.5" value="5">
+      </div>
+
+      <div class="chart-container">
+        <canvas id="compoundChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary-grid" id="summary-grid">
+      <div class="summary-card">
+        <div class="summary-label">積立元本</div>
+        <div class="summary-value" id="sum-principal">-</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">運用益</div>
+        <div class="summary-value green" id="sum-profit">-</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">合計資産</div>
+        <div class="summary-value highlight" id="sum-total">-</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-label">増加率</div>
+        <div class="summary-value green" id="sum-rate">-</div>
+      </div>
+    </div>
+
+    <!-- Early Start -->
+    <div class="early-start-card">
+      <h4>⏰ 今日始めた場合 vs 1年後に始めた場合</h4>
+      <div class="early-start-diff" id="early-diff">-</div>
+      <div class="early-start-desc">早く始めるだけでこれだけの差が生まれます！</div>
+    </div>
+
+    <button class="btn-primary mt-xl" id="btn-to-education">
+      投資の基礎を学ぶ 📚
+    </button>
+  </section>
+
+  <!-- ===== PAGE 4: EDUCATION ===== -->
+  <section class="page education" id="page-education">
+    <div class="education-header">
+      <h2>📚 投資の基礎知識</h2>
+      <p>カードをめくって、投資の本当の姿を知ろう</p>
+    </div>
+
+    <div class="card-carousel" id="edu-carousel">
+      <!-- Dynamically populated -->
+    </div>
+
+    <div class="carousel-controls">
+      <button class="carousel-btn" id="edu-prev">←</button>
+      <div class="carousel-dots" id="edu-dots"></div>
+      <button class="carousel-btn" id="edu-next">→</button>
+    </div>
+
+    <button class="btn-primary mt-xl" id="btn-to-quiz">
+      知識テストに挑戦 🎮
+    </button>
+  </section>
+
+  <!-- ===== PAGE 5: QUIZ ===== -->
+  <section class="page quiz" id="page-quiz">
+    <div class="quiz-header">
+      <h2>🎮 知識チェッククイズ</h2>
+      <p class="quiz-progress" id="quiz-progress">5問中 1問目</p>
+      <div class="progress-bar mt-md" style="max-width:300px;margin-left:auto;margin-right:auto;">
+        <div class="progress-fill" id="quiz-progress-bar" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="quiz-card glass-card" id="quiz-area">
+      <!-- Dynamically populated -->
+    </div>
+
+    <div class="quiz-result" id="quiz-result" style="display:none;">
+      <!-- Quiz result -->
+    </div>
+  </section>
+
+  <!-- ===== PAGE 6: BROKERS / CTA ===== -->
+  <section class="page brokers" id="page-brokers">
+    <div class="brokers-header">
+      <h2>🚀 次のステップ：投資を始めよう！</h2>
+      <p>あなたにピッタリの証券口座を見つけましょう</p>
+    </div>
+
+    <!-- Badges -->
+    <div class="badges-section glass-card" id="badges-section">
+      <h3>🏅 獲得バッジ</h3>
+      <div class="badges-grid" id="badges-grid">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
+
+    <!-- Broker Cards -->
+    <div class="broker-cards" id="broker-cards">
+      <!-- Dynamically populated -->
+    </div>
+
+    <div class="text-center mt-xl">
+      <button class="btn-secondary" id="btn-restart">
+        🔄 もう一度診断する
+      </button>
+    </div>
+
+    <footer style="text-align:center;margin-top:var(--space-2xl);padding:var(--space-xl) 0;border-top:1px solid var(--glass-border);">
+      <p style="font-size:0.75rem;color:var(--text-tertiary);line-height:1.8;">
+        ※ 本シミュレーションは将来の運用成果を保証するものではありません。<br>
+        ※ 投資にはリスクが伴います。余裕資金で行いましょう。<br>
+        © 2026 Finance Simulator. All rights reserved.
+      </p>
+    </footer>
+  </section>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/diagnosis.js"></script>
+  <script src="js/simulator.js"></script>
+  <script src="js/education.js"></script>
+  <script src="js/quiz.js"></script>
+</body>
+</html>
