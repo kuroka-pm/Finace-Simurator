@@ -55,6 +55,7 @@
     <button class="nav-dot" data-page="education" title="学習" id="nav-education"></button>
     <button class="nav-dot" data-page="quiz" title="クイズ" id="nav-quiz"></button>
     <button class="nav-dot" data-page="stories" title="体験談" id="nav-stories"></button>
+    <button class="nav-dot" data-page="virtual-invest" title="仮想投資" id="nav-virtual-invest"></button>
     <button class="nav-dot" data-page="brokers" title="始める" id="nav-brokers"></button>
   </nav>
 
@@ -404,6 +405,25 @@
       <div class="early-start-desc">早く始めるだけでこれだけの差が生まれます！</div>
     </div>
 
+    <!-- Daily Challenge -->
+    <div class="glass-card daily-challenge-section">
+      <h3>🎯 今日のチャレンジ</h3>
+      <div id="daily-challenge-card" class="dc-card">
+        <!-- Dynamically populated -->
+      </div>
+      <div class="dc-streak">
+        <span>🔥 連続達成</span>
+        <span id="dc-streak-count" class="dc-streak-num">0日</span>
+      </div>
+      <div class="dc-progress">
+        <div class="dc-progress-label">チャレンジ達成率</div>
+        <div class="dc-progress-bar">
+          <div class="dc-progress-fill" id="dc-progress-fill"></div>
+        </div>
+        <span class="dc-progress-text" id="dc-progress-text">0 / 14</span>
+      </div>
+    </div>
+
     <button class="btn-primary mt-xl" id="btn-to-education">
       投資の基礎を学ぶ 📚
     </button>
@@ -555,7 +575,88 @@
     </button>
   </section>
 
-  <!-- ===== PAGE 7: BROKERS / CTA (小さな一歩) ===== -->
+  <!-- ===== PAGE 7: VIRTUAL INVESTMENT (仮想投資体験) ===== -->
+  <section class="page virtual-invest" id="page-virtual-invest">
+    <div class="vi-header">
+      <h2>🎮 仮想投資体験</h2>
+      <p>10万円の仮想マネーで、リスクゼロで投資を体験！</p>
+    </div>
+
+    <!-- Portfolio Summary -->
+    <div class="glass-card vi-portfolio">
+      <div class="vi-balance">
+        <span class="vi-balance-label">仮想資産総額</span>
+        <span class="vi-balance-amount" id="vi-total-balance">¥100,000</span>
+      </div>
+      <div class="vi-stats">
+        <div class="vi-stat">
+          <span class="vi-stat-label">現金残高</span>
+          <span class="vi-stat-value" id="vi-cash">¥100,000</span>
+        </div>
+        <div class="vi-stat">
+          <span class="vi-stat-label">評価額</span>
+          <span class="vi-stat-value" id="vi-holdings-value">¥0</span>
+        </div>
+        <div class="vi-stat">
+          <span class="vi-stat-label">損益</span>
+          <span class="vi-stat-value" id="vi-profit-loss">¥0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stock List -->
+    <div class="glass-card vi-stock-section">
+      <h3>📊 銘柄一覧</h3>
+      <div class="vi-stock-grid" id="vi-stock-grid">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
+
+    <!-- Trade Modal -->
+    <div class="vi-trade-modal" id="vi-trade-modal" style="display:none;">
+      <div class="vi-trade-card glass-card">
+        <div class="vi-trade-header" id="vi-trade-header"></div>
+        <div class="vi-trade-body">
+          <div class="vi-trade-inputs">
+            <label>数量（口）</label>
+            <div class="vi-qty-control">
+              <button class="vi-qty-btn" id="vi-qty-minus">−</button>
+              <input type="number" id="vi-qty" value="1" min="1">
+              <button class="vi-qty-btn" id="vi-qty-plus">＋</button>
+            </div>
+            <div class="vi-trade-cost" id="vi-trade-cost">合計: ¥0</div>
+          </div>
+          <div class="vi-trade-actions">
+            <button class="btn-buy" id="vi-btn-buy">📈 購入</button>
+            <button class="btn-sell" id="vi-btn-sell">📉 売却</button>
+            <button class="btn-cancel" id="vi-btn-cancel">✕ 閉じる</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Holdings -->
+    <div class="glass-card vi-holdings-section">
+      <h3>💼 保有銘柄</h3>
+      <div id="vi-my-holdings" class="vi-holdings-list">
+        <p class="vi-empty">まだ銘柄を購入していません</p>
+      </div>
+    </div>
+
+    <!-- Trade History -->
+    <div class="glass-card vi-history-section">
+      <h3>📜 取引履歴</h3>
+      <div id="vi-history" class="vi-history-list">
+        <p class="vi-empty">取引履歴はまだありません</p>
+      </div>
+    </div>
+
+    <button class="btn-primary btn-glow mt-xl" id="btn-to-brokers-from-vi">
+      本物の投資を始めてみる！ 🚀
+    </button>
+  </section>
+
+  <!-- ===== PAGE 8: BROKERS / CTA (小さな一歩) ===== -->
   <section class="page brokers" id="page-brokers">
     <div class="steps-header">
       <img src="img/coins-growth.jpg" alt="投資の成長" class="section-header-image" loading="lazy">

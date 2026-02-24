@@ -387,3 +387,91 @@ const LIFE_GOALS = [
         color: '#9575CD'
     }
 ];
+
+// --- 仮想投資用 株式銘柄データ ---
+const VIRTUAL_STOCKS = [
+    {
+        id: 'sp500',
+        name: 'S&P500 インデックス',
+        ticker: 'SPX',
+        icon: '🇺🇸',
+        category: '米国株式',
+        risk: '中',
+        description: '米国の代表的な500社に分散投資',
+        priceHistory: [4200, 4350, 4180, 4400, 4550, 4300, 4600, 4750, 4500, 4800, 4650, 4900],
+        currentPrice: 4900
+    },
+    {
+        id: 'nikkei',
+        name: '日経225 インデックス',
+        ticker: 'NKY',
+        icon: '🇯🇵',
+        category: '日本株式',
+        risk: '中',
+        description: '日本の大手225社に分散投資',
+        priceHistory: [28000, 29200, 27800, 30100, 31500, 29800, 32000, 33200, 31500, 34000, 32800, 35000],
+        currentPrice: 35000
+    },
+    {
+        id: 'emaxis',
+        name: '全世界株式（オルカン）',
+        ticker: 'ACWI',
+        icon: '🌍',
+        category: '全世界株式',
+        risk: '中',
+        description: '先進国+新興国に幅広く分散投資',
+        priceHistory: [18500, 19200, 18800, 19500, 20100, 19300, 20500, 21000, 20200, 21500, 20800, 22000],
+        currentPrice: 22000
+    },
+    {
+        id: 'bond',
+        name: '国内債券ファンド',
+        ticker: 'JBND',
+        icon: '🏛️',
+        category: '債券',
+        risk: '低',
+        description: '安定重視の国内債券中心ファンド',
+        priceHistory: [10000, 10050, 10020, 10080, 10100, 10070, 10120, 10150, 10100, 10180, 10160, 10200],
+        currentPrice: 10200
+    },
+    {
+        id: 'reit',
+        name: 'J-REIT インデックス',
+        ticker: 'JREIT',
+        icon: '🏢',
+        category: '不動産',
+        risk: '中〜高',
+        description: '日本の不動産に投資（高配当）',
+        priceHistory: [1800, 1850, 1780, 1900, 1950, 1820, 1880, 1960, 1900, 2000, 1950, 2050],
+        currentPrice: 2050
+    },
+    {
+        id: 'tech',
+        name: 'テクノロジー株ファンド',
+        ticker: 'TECH',
+        icon: '💻',
+        category: 'テーマ型',
+        risk: '高',
+        description: 'AI・半導体などテック企業に集中投資',
+        priceHistory: [5000, 5500, 4800, 5800, 6200, 5300, 6500, 7000, 6000, 7500, 6800, 7800],
+        currentPrice: 7800
+    }
+];
+
+// --- デイリーチャレンジデータ ---
+const DAILY_CHALLENGES = [
+    { id: 1, title: 'NISAの仕組みを調べよう', description: 'NISAとは何か、非課税のメリットを理解しよう', category: '📚 学習', xp: 10, action: 'learn' },
+    { id: 2, title: '72の法則を使ってみよう', description: '72÷年利＝お金が2倍になる年数。年利5%なら何年？', category: '🧮 計算', xp: 10, action: 'calc' },
+    { id: 3, title: '仮想投資で1銘柄買ってみよう', description: '仮想マネーで実際に投資体験！', category: '🎮 体験', xp: 15, action: 'trade' },
+    { id: 4, title: '積立投資のメリットを確認', description: 'ドルコスト平均法の仕組みを学ぼう', category: '📚 学習', xp: 10, action: 'learn' },
+    { id: 5, title: '先輩の体験談を読もう', description: '実際に投資を始めた人たちの声をチェック', category: '👥 交流', xp: 10, action: 'stories' },
+    { id: 6, title: '自分のリスク許容度を確認', description: '診断結果を振り返り、自分のタイプを理解しよう', category: '🎯 振り返り', xp: 10, action: 'review' },
+    { id: 7, title: '仮想ポートフォリオを組んでみよう', description: '3つ以上の銘柄に分散投資してみよう', category: '🎮 体験', xp: 20, action: 'trade' },
+    { id: 8, title: 'インフレリスクを理解しよう', description: '「何もしない」リスクについて学ぼう', category: '📚 学習', xp: 10, action: 'learn' },
+    { id: 9, title: '暴落のとき、どうする？', description: '暴落シミュレーションで心の準備をしよう', category: '🧠 メンタル', xp: 15, action: 'crash' },
+    { id: 10, title: '投資の名言を3つ覚えよう', description: 'ウォーレン・バフェットの名言から学ぶ', category: '📚 学習', xp: 10, action: 'learn' },
+    { id: 11, title: '友達にシェアしてみよう', description: 'このアプリをSNSでシェアしよう', category: '📣 シェア', xp: 15, action: 'share' },
+    { id: 12, title: '証券口座の種類を比較', description: 'SBI証券・楽天証券の違いを学ぼう', category: '🔍 調査', xp: 10, action: 'compare' },
+    { id: 13, title: '自分のライフゴールを設定', description: '何のために投資するか明確にしよう', category: '🎯 目標', xp: 10, action: 'goal' },
+    { id: 14, title: '今日の投資豆知識をチェック', description: 'ランディングページの豆知識を読もう', category: '📚 学習', xp: 5, action: 'tip' }
+];

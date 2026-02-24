@@ -2762,3 +2762,563 @@ input[type="range"]::-moz-range-thumb {
   border: 1px solid var(--glass-border);
   color: var(--text-primary);
 }
+
+/* ============================================================
+   VIRTUAL INVESTMENT
+   ============================================================ */
+.vi-header {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+.vi-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.vi-header p {
+  color: var(--text-secondary);
+  margin-top: var(--space-xs);
+}
+
+/* Portfolio Card */
+.vi-portfolio {
+  width: 100%;
+  text-align: center;
+}
+
+.vi-balance {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: var(--space-md);
+}
+
+.vi-balance-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.vi-balance-amount {
+  font-size: 2rem;
+  font-weight: 800;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.vi-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-sm);
+}
+
+.vi-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.vi-stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.vi-stat-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.vi-positive {
+  color: #34D399 !important;
+}
+
+.vi-negative {
+  color: #F87171 !important;
+}
+
+/* Stock Grid */
+.vi-stock-section {
+  width: 100%;
+}
+
+.vi-stock-section h3 {
+  margin-bottom: var(--space-md);
+}
+
+.vi-stock-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+.vi-stock-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  transition: var(--transition-normal);
+  cursor: pointer;
+}
+
+.vi-stock-card:hover {
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.15);
+}
+
+.vi-stock-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xs);
+}
+
+.vi-stock-icon {
+  font-size: 1.4rem;
+}
+
+.vi-stock-risk {
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.vi-risk-low {
+  background: rgba(52, 211, 153, 0.2);
+  color: #34D399;
+}
+
+.vi-risk-mid {
+  background: rgba(251, 191, 36, 0.2);
+  color: #FBBF24;
+}
+
+.vi-risk-high {
+  background: rgba(248, 113, 113, 0.2);
+  color: #F87171;
+}
+
+.vi-stock-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.vi-stock-ticker {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.vi-stock-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.vi-stock-change {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.vi-stock-change.up {
+  color: #34D399;
+}
+
+.vi-stock-change.down {
+  color: #F87171;
+}
+
+.vi-stock-sparkline {
+  margin: var(--space-xs) 0;
+  display: flex;
+  justify-content: center;
+}
+
+.vi-trade-btn {
+  width: 100%;
+  padding: 6px;
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+.vi-trade-btn:hover {
+  background: var(--accent-secondary);
+  transform: scale(1.02);
+}
+
+/* Trade Modal */
+.vi-trade-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-lg);
+}
+
+.vi-trade-card {
+  width: 100%;
+  max-width: 400px;
+  animation: slideUp 0.3s ease;
+}
+
+.vi-trade-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: var(--space-md);
+}
+
+.vi-trade-icon {
+  font-size: 2rem;
+}
+
+.vi-trade-name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.vi-trade-price {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.vi-trade-inputs label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.vi-qty-control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.vi-qty-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-normal);
+}
+
+.vi-qty-btn:hover {
+  border-color: var(--accent-primary);
+  background: rgba(79, 70, 229, 0.2);
+}
+
+.vi-qty-control input {
+  width: 60px;
+  text-align: center;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  padding: 6px;
+}
+
+.vi-trade-cost {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+  margin: var(--space-md) 0;
+  color: var(--accent-primary);
+}
+
+.vi-trade-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.btn-buy,
+.btn-sell,
+.btn-cancel {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+.btn-buy {
+  background: linear-gradient(135deg, #34D399, #10B981);
+  color: white;
+}
+
+.btn-sell {
+  background: linear-gradient(135deg, #F87171, #EF4444);
+  color: white;
+}
+
+.btn-buy:disabled,
+.btn-sell:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+}
+
+/* Holdings */
+.vi-holdings-section,
+.vi-history-section {
+  width: 100%;
+}
+
+.vi-holdings-section h3,
+.vi-history-section h3 {
+  margin-bottom: var(--space-md);
+}
+
+.vi-empty {
+  color: var(--text-secondary);
+  text-align: center;
+  font-size: 0.85rem;
+  padding: var(--space-md);
+}
+
+.vi-holding-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.vi-holding-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.vi-holding-icon {
+  font-size: 1.3rem;
+}
+
+.vi-holding-name {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.vi-holding-qty {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.vi-holding-values {
+  text-align: right;
+}
+
+.vi-holding-val {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.vi-holding-pl {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Trade History */
+.vi-history-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.8rem;
+}
+
+.vi-history-type {
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+.vi-history-type.buy {
+  background: rgba(52, 211, 153, 0.2);
+  color: #34D399;
+}
+
+.vi-history-type.sell {
+  background: rgba(248, 113, 113, 0.2);
+  color: #F87171;
+}
+
+.vi-history-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.vi-history-meta {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.vi-history-time {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   DAILY CHALLENGE
+   ============================================================ */
+.daily-challenge-section {
+  width: 100%;
+}
+
+.daily-challenge-section h3 {
+  text-align: center;
+  margin-bottom: var(--space-md);
+}
+
+.dc-card {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(139, 92, 246, 0.1));
+  border: 1px solid rgba(79, 70, 229, 0.3);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  text-align: center;
+  margin-bottom: var(--space-md);
+}
+
+.dc-category {
+  font-size: 0.75rem;
+  color: var(--accent-primary);
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.dc-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: var(--space-xs);
+}
+
+.dc-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.dc-reward {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #FBBF24;
+  margin-bottom: var(--space-md);
+}
+
+.dc-complete-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+.dc-complete-btn:hover:not(:disabled) {
+  transform: scale(1.02);
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.4);
+}
+
+.dc-complete-btn.completed {
+  background: linear-gradient(135deg, #34D399, #10B981);
+  cursor: default;
+}
+
+.dc-streak {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  font-size: 0.9rem;
+}
+
+.dc-streak-num {
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: #F97316;
+}
+
+.dc-progress {
+  text-align: center;
+}
+
+.dc-progress-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.dc-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: var(--space-xs);
+}
+
+.dc-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-primary), #34D399);
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dc-progress-text {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Responsive: stock grid */
+@media (max-width: 400px) {
+  .vi-stock-grid {
+    grid-template-columns: 1fr;
+  }
+}

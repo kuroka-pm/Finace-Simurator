@@ -3,7 +3,7 @@
 // ============================================================
 
 const App = (() => {
-    const pages = ['landing', 'empathy', 'diagnosis', 'result', 'education', 'quiz', 'stories', 'brokers'];
+    const pages = ['landing', 'empathy', 'diagnosis', 'result', 'education', 'quiz', 'stories', 'virtual-invest', 'brokers'];
     let currentPage = 'landing';
     let userState = {
         diagnosisAnswers: {},
@@ -37,6 +37,7 @@ const App = (() => {
             try { userState = JSON.parse(saved); } catch (e) { }
         }
         updateLevelWidget();
+        initDailyChallenge();
 
         // Scroll-reveal observer
         const observer = new IntersectionObserver((entries) => {
@@ -160,11 +161,8 @@ const App = (() => {
     function canVisitPage(page) {
         const idx = pages.indexOf(page);
         if (idx <= 2) return true; // Landing, empathy, diagnosis always accessible
-        if (idx === 3 && userState.riskType !== null) return true;
-        if (idx === 4 && userState.riskType !== null) return true;
-        if (idx === 5 && userState.riskType !== null) return true;
-        if (idx === 6 && userState.riskType !== null) return true;
-        if (idx === 7) return true; // Brokers always accessible
+        if (idx >= 3 && idx <= 7 && userState.riskType !== null) return true;
+        if (idx === 8) return true; // Brokers always accessible
         return false;
     }
 
@@ -196,6 +194,11 @@ const App = (() => {
         });
 
         document.getElementById('btn-to-brokers')?.addEventListener('click', () => {
+            navigateTo('virtual-invest');
+            initVirtualInvest();
+        });
+
+        document.getElementById('btn-to-brokers-from-vi')?.addEventListener('click', () => {
             navigateTo('brokers');
             Quiz.renderBrokers();
             updateReadinessMeter();
@@ -581,7 +584,309 @@ const App = (() => {
         requestAnimationFrame(update);
     }
 
-    return { init, navigateTo, getState, setState, addBadge, fireConfetti, formatCurrency, formatCurrencyExact, animateCountUp, renderCrashSimulation, updateReadinessMeter, updateLevelWidget, pages };
+    // ========================
+    // VIRTUAL INVESTMENT
+    // ========================
+    let viPortfolio = { cash: 100000, holdings: {}, history: [] };
+    let viSelectedStock = null;
+
+    function initVirtualInvest() {
+        // Load saved state
+        const saved = sessionStorage.getItem('viPortfolio');
+        if (saved) try { viPortfolio = JSON.parse(saved); } catch (e) { }
+        renderStockGrid();
+        updatePortfolioUI();
+        renderHoldings();
+        renderTradeHistory();
+    }
+
+    function saveViState() {
+        sessionStorage.setItem('viPortfolio', JSON.stringify(viPortfolio));
+    }
+
+    function renderStockGrid() {
+        const grid = document.getElementById('vi-stock-grid');
+        if (!grid || typeof VIRTUAL_STOCKS === 'undefined') return;
+        grid.innerHTML = VIRTUAL_STOCKS.map(stock => {
+            const change = ((stock.currentPrice - stock.priceHistory[stock.priceHistory.length - 2]) / stock.priceHistory[stock.priceHistory.length - 2] * 100).toFixed(1);
+            const isUp = change >= 0;
+            return `
+            <div class="vi-stock-card" data-stock-id="${stock.id}">
+                <div class="vi-stock-top">
+                    <span class="vi-stock-icon">${stock.icon}</span>
+                    <span class="vi-stock-risk vi-risk-${stock.risk === '低' ? 'low' : stock.risk === '高' ? 'high' : 'mid'}">${stock.risk}</span>
+                </div>
+                <div class="vi-stock-name">${stock.name}</div>
+                <div class="vi-stock-ticker">${stock.ticker}</div>
+                <div class="vi-stock-price">¥${stock.currentPrice.toLocaleString()}</div>
+                <div class="vi-stock-change ${isUp ? 'up' : 'down'}">${isUp ? '+' : ''}${change}%</div>
+                <div class="vi-stock-sparkline">${renderSparkline(stock.priceHistory)}</div>
+                <button class="vi-trade-btn" data-stock-id="${stock.id}">取引する</button>
+            </div>`;
+        }).join('');
+
+        grid.querySelectorAll('.vi-trade-btn').forEach(btn => {
+            btn.addEventListener('click', () => openTradeModal(btn.dataset.stockId));
+        });
+    }
+
+    function renderSparkline(prices) {
+        const max = Math.max(...prices);
+        const min = Math.min(...prices);
+        const range = max - min || 1;
+        const w = 120, h = 30;
+        const points = prices.map((p, i) => `${(i / (prices.length - 1)) * w},${h - ((p - min) / range) * h}`).join(' ');
+        const isUp = prices[prices.length - 1] >= prices[0];
+        return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><polyline points="${points}" fill="none" stroke="${isUp ? '#34D399' : '#F87171'}" stroke-width="1.5" /></svg>`;
+    }
+
+    function openTradeModal(stockId) {
+        const stock = VIRTUAL_STOCKS.find(s => s.id === stockId);
+        if (!stock) return;
+        viSelectedStock = stock;
+        const modal = document.getElementById('vi-trade-modal');
+        const header = document.getElementById('vi-trade-header');
+        modal.style.display = 'flex';
+        header.innerHTML = `
+            <span class="vi-trade-icon">${stock.icon}</span>
+            <div>
+                <div class="vi-trade-name">${stock.name}</div>
+                <div class="vi-trade-price">現在価格: ¥${stock.currentPrice.toLocaleString()}</div>
+            </div>`;
+        document.getElementById('vi-qty').value = 1;
+        updateTradeCost();
+
+        // Check if user owns this stock for sell button
+        const owned = viPortfolio.holdings[stockId];
+        document.getElementById('vi-btn-sell').disabled = !owned || owned.qty <= 0;
+
+        // Event listeners (remove old ones by cloning)
+        const qtyInput = document.getElementById('vi-qty');
+        qtyInput.oninput = updateTradeCost;
+        document.getElementById('vi-qty-minus').onclick = () => { qtyInput.value = Math.max(1, parseInt(qtyInput.value) - 1); updateTradeCost(); };
+        document.getElementById('vi-qty-plus').onclick = () => { qtyInput.value = parseInt(qtyInput.value) + 1; updateTradeCost(); };
+        document.getElementById('vi-btn-buy').onclick = () => executeTrade('buy');
+        document.getElementById('vi-btn-sell').onclick = () => executeTrade('sell');
+        document.getElementById('vi-btn-cancel').onclick = () => { modal.style.display = 'none'; };
+    }
+
+    function updateTradeCost() {
+        if (!viSelectedStock) return;
+        const qty = parseInt(document.getElementById('vi-qty').value) || 1;
+        const cost = viSelectedStock.currentPrice * qty;
+        document.getElementById('vi-trade-cost').textContent = `合計: ¥${cost.toLocaleString()}`;
+    }
+
+    function executeTrade(type) {
+        if (!viSelectedStock) return;
+        const qty = parseInt(document.getElementById('vi-qty').value) || 1;
+        const cost = viSelectedStock.currentPrice * qty;
+        const stockId = viSelectedStock.id;
+
+        if (type === 'buy') {
+            if (cost > viPortfolio.cash) {
+                alert('現金残高が不足しています！');
+                return;
+            }
+            viPortfolio.cash -= cost;
+            if (!viPortfolio.holdings[stockId]) {
+                viPortfolio.holdings[stockId] = { qty: 0, avgPrice: 0 };
+            }
+            const h = viPortfolio.holdings[stockId];
+            h.avgPrice = (h.avgPrice * h.qty + cost) / (h.qty + qty);
+            h.qty += qty;
+        } else {
+            const h = viPortfolio.holdings[stockId];
+            if (!h || h.qty < qty) {
+                alert('保有数量が不足しています！');
+                return;
+            }
+            viPortfolio.cash += cost;
+            h.qty -= qty;
+            if (h.qty === 0) delete viPortfolio.holdings[stockId];
+        }
+
+        viPortfolio.history.unshift({
+            type,
+            stockId,
+            name: viSelectedStock.name,
+            icon: viSelectedStock.icon,
+            price: viSelectedStock.currentPrice,
+            qty,
+            total: cost,
+            time: new Date().toLocaleString('ja-JP')
+        });
+
+        saveViState();
+        updatePortfolioUI();
+        renderHoldings();
+        renderTradeHistory();
+        document.getElementById('vi-trade-modal').style.display = 'none';
+
+        // Achievement
+        if (Object.keys(viPortfolio.holdings).length >= 1 && !userState.badges.includes('仮想投資家')) {
+            addBadge('仮想投資家');
+        }
+        if (Object.keys(viPortfolio.holdings).length >= 3 && !userState.badges.includes('分散投資家')) {
+            addBadge('分散投資家');
+        }
+        updateLevelWidget();
+    }
+
+    function updatePortfolioUI() {
+        let holdingsValue = 0;
+        let totalCost = 0;
+        Object.entries(viPortfolio.holdings).forEach(([id, h]) => {
+            const stock = VIRTUAL_STOCKS.find(s => s.id === id);
+            if (stock) {
+                holdingsValue += stock.currentPrice * h.qty;
+                totalCost += h.avgPrice * h.qty;
+            }
+        });
+        const totalBalance = viPortfolio.cash + holdingsValue;
+        const profitLoss = holdingsValue - totalCost;
+
+        const cashEl = document.getElementById('vi-cash');
+        const holdEl = document.getElementById('vi-holdings-value');
+        const totalEl = document.getElementById('vi-total-balance');
+        const plEl = document.getElementById('vi-profit-loss');
+        if (!cashEl) return;
+
+        cashEl.textContent = `¥${viPortfolio.cash.toLocaleString()}`;
+        holdEl.textContent = `¥${holdingsValue.toLocaleString()}`;
+        totalEl.textContent = `¥${totalBalance.toLocaleString()}`;
+        plEl.textContent = `${profitLoss >= 0 ? '+' : ''}¥${profitLoss.toLocaleString()}`;
+        plEl.className = `vi-stat-value ${profitLoss >= 0 ? 'vi-positive' : 'vi-negative'}`;
+    }
+
+    function renderHoldings() {
+        const container = document.getElementById('vi-my-holdings');
+        if (!container) return;
+        const holdings = Object.entries(viPortfolio.holdings);
+        if (holdings.length === 0) {
+            container.innerHTML = '<p class="vi-empty">まだ銘柄を購入していません</p>';
+            return;
+        }
+        container.innerHTML = holdings.map(([id, h]) => {
+            const stock = VIRTUAL_STOCKS.find(s => s.id === id);
+            if (!stock) return '';
+            const currentVal = stock.currentPrice * h.qty;
+            const costVal = h.avgPrice * h.qty;
+            const pl = currentVal - costVal;
+            const plPct = ((pl / costVal) * 100).toFixed(1);
+            return `
+            <div class="vi-holding-item">
+                <div class="vi-holding-info">
+                    <span class="vi-holding-icon">${stock.icon}</span>
+                    <div>
+                        <div class="vi-holding-name">${stock.name}</div>
+                        <div class="vi-holding-qty">${h.qty}口 × ¥${stock.currentPrice.toLocaleString()}</div>
+                    </div>
+                </div>
+                <div class="vi-holding-values">
+                    <div class="vi-holding-val">¥${currentVal.toLocaleString()}</div>
+                    <div class="vi-holding-pl ${pl >= 0 ? 'vi-positive' : 'vi-negative'}">${pl >= 0 ? '+' : ''}¥${pl.toLocaleString()} (${pl >= 0 ? '+' : ''}${plPct}%)</div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function renderTradeHistory() {
+        const container = document.getElementById('vi-history');
+        if (!container) return;
+        if (viPortfolio.history.length === 0) {
+            container.innerHTML = '<p class="vi-empty">取引履歴はまだありません</p>';
+            return;
+        }
+        container.innerHTML = viPortfolio.history.slice(0, 10).map(t => `
+            <div class="vi-history-item">
+                <div class="vi-history-type ${t.type}">${t.type === 'buy' ? '購入' : '売却'}</div>
+                <div class="vi-history-detail">
+                    <span>${t.icon} ${t.name}</span>
+                    <span class="vi-history-meta">${t.qty}口 × ¥${t.price.toLocaleString()} = ¥${t.total.toLocaleString()}</span>
+                </div>
+                <div class="vi-history-time">${t.time}</div>
+            </div>`).join('');
+    }
+
+    // ========================
+    // DAILY CHALLENGES
+    // ========================
+    function initDailyChallenge() {
+        if (typeof DAILY_CHALLENGES === 'undefined') return;
+        const today = new Date();
+        const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+        const challengeIndex = dayOfYear % DAILY_CHALLENGES.length;
+        const challenge = DAILY_CHALLENGES[challengeIndex];
+
+        // Load completed challenges
+        const completed = JSON.parse(sessionStorage.getItem('completedChallenges') || '[]');
+        const streakStr = sessionStorage.getItem('challengeStreak') || '0';
+        const streak = parseInt(streakStr);
+        const isCompleted = completed.includes(challenge.id);
+
+        const card = document.getElementById('daily-challenge-card');
+        if (!card) return;
+
+        card.innerHTML = `
+            <div class="dc-category">${challenge.category}</div>
+            <div class="dc-title">${challenge.title}</div>
+            <div class="dc-desc">${challenge.description}</div>
+            <div class="dc-reward">🏆 +${challenge.xp} XP</div>
+            <button class="dc-complete-btn ${isCompleted ? 'completed' : ''}" id="dc-complete-btn" ${isCompleted ? 'disabled' : ''}>
+                ${isCompleted ? '✅ 達成済み！' : '🎯 チャレンジ達成！'}
+            </button>`;
+
+        if (!isCompleted) {
+            document.getElementById('dc-complete-btn')?.addEventListener('click', () => {
+                completeChallenge(challenge, completed);
+            });
+        }
+
+        // Update streak and progress
+        const streakEl = document.getElementById('dc-streak-count');
+        const fillEl = document.getElementById('dc-progress-fill');
+        const textEl = document.getElementById('dc-progress-text');
+        if (streakEl) streakEl.textContent = `${streak}日`;
+        if (fillEl) fillEl.style.width = `${(completed.length / DAILY_CHALLENGES.length) * 100}%`;
+        if (textEl) textEl.textContent = `${completed.length} / ${DAILY_CHALLENGES.length}`;
+    }
+
+    function completeChallenge(challenge, completed) {
+        completed.push(challenge.id);
+        sessionStorage.setItem('completedChallenges', JSON.stringify(completed));
+
+        // Update streak
+        const lastDate = sessionStorage.getItem('lastChallengeDate');
+        const today = new Date().toDateString();
+        let streak = parseInt(sessionStorage.getItem('challengeStreak') || '0');
+        if (lastDate !== today) {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            streak = lastDate === yesterday.toDateString() ? streak + 1 : 1;
+            sessionStorage.setItem('challengeStreak', streak.toString());
+            sessionStorage.setItem('lastChallengeDate', today);
+        }
+
+        // UI update
+        const btn = document.getElementById('dc-complete-btn');
+        if (btn) {
+            btn.textContent = '✅ 達成済み！';
+            btn.classList.add('completed');
+            btn.disabled = true;
+        }
+        const streakEl = document.getElementById('dc-streak-count');
+        if (streakEl) streakEl.textContent = `${streak}日`;
+        const fillEl = document.getElementById('dc-progress-fill');
+        const textEl = document.getElementById('dc-progress-text');
+        if (fillEl) fillEl.style.width = `${(completed.length / DAILY_CHALLENGES.length) * 100}%`;
+        if (textEl) textEl.textContent = `${completed.length} / ${DAILY_CHALLENGES.length}`;
+
+        fireConfetti();
+        updateLevelWidget();
+    }
+
+    return { init, navigateTo, getState, setState, addBadge, fireConfetti, formatCurrency, formatCurrencyExact, animateCountUp, renderCrashSimulation, updateReadinessMeter, updateLevelWidget, initVirtualInvest, initDailyChallenge, pages };
 })();
 
 // Initialize on DOM ready
