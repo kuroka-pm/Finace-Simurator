@@ -1375,3 +1375,270 @@ input[type="range"]::-moz-range-thumb {
     display: none;
   }
 }
+
+/* ============================================================
+   LOADING SCREEN
+   ============================================================ */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loading-logo {
+  text-align: center;
+}
+
+.loading-icon {
+  font-size: 4rem;
+  animation: pulse-icon 1.5s ease-in-out infinite;
+  margin-bottom: var(--space-lg);
+}
+
+.loading-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: var(--space-xl);
+  letter-spacing: 0.05em;
+}
+
+.loading-bar-container {
+  width: 180px;
+  height: 3px;
+  background: var(--surface);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.loading-bar {
+  width: 0;
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-full);
+  animation: loading-progress 1.2s ease-out forwards;
+}
+
+@keyframes loading-progress {
+  0% { width: 0; }
+  60% { width: 80%; }
+  100% { width: 100%; }
+}
+
+/* ============================================================
+   MESH GRADIENT BACKGROUND
+   ============================================================ */
+.mesh-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.6;
+  background:
+    radial-gradient(ellipse 600px 600px at 15% 30%, rgba(79, 140, 255, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 500px at 85% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 400px at 50% 80%, rgba(52, 211, 153, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 300px 300px at 70% 60%, rgba(244, 114, 182, 0.06) 0%, transparent 70%);
+  animation: mesh-shift 20s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes mesh-shift {
+  0% { filter: hue-rotate(0deg); transform: scale(1); }
+  50% { filter: hue-rotate(15deg); transform: scale(1.05); }
+  100% { filter: hue-rotate(-10deg); transform: scale(1); }
+}
+
+/* ============================================================
+   TOAST NOTIFICATIONS
+   ============================================================ */
+.toast-container {
+  position: fixed;
+  top: var(--space-lg);
+  right: var(--space-lg);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: rgba(17, 22, 56, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg), var(--shadow-glow-blue);
+  animation: toastIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  min-width: 250px;
+  max-width: 360px;
+}
+
+.toast.toast-out {
+  animation: toastOut 0.4s ease-in forwards;
+}
+
+.toast-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.toast-content {
+  flex: 1;
+}
+
+.toast-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.toast-message {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+@keyframes toastIn {
+  0% { opacity: 0; transform: translateX(100px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toastOut {
+  0% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(100px); }
+}
+
+/* ============================================================
+   ENHANCED LANDING PAGE
+   ============================================================ */
+.landing-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-icon span {
+  font-size: 4rem;
+  position: relative;
+  z-index: 1;
+  animation: pulse-icon 3s ease-in-out infinite;
+}
+
+.landing-icon-ring {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px solid rgba(79, 140, 255, 0.2);
+  animation: ring-pulse 3s ease-in-out infinite;
+}
+
+.landing-icon-ring::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  animation: ring-pulse 3s ease-in-out infinite 0.5s;
+}
+
+@keyframes ring-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+.landing-stats {
+  padding: var(--space-md) var(--space-xl);
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.15);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.stat-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.stat-number {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--accent-red);
+  font-family: var(--font-primary);
+}
+
+.stat-unit {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent-red);
+}
+
+.stat-label {
+  width: 100%;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: var(--space-xs);
+}
+
+/* Button Glow Effect */
+.btn-glow {
+  animation: btn-glow-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes btn-glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(79, 140, 255, 0.3); }
+  50% { box-shadow: 0 0 35px rgba(79, 140, 255, 0.5), 0 0 60px rgba(139, 92, 246, 0.2); }
+}
+
+.landing-disclaimer {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  margin-top: var(--space-sm);
+}
+
+/* ============================================================
+   NUMBER COUNT-UP ANIMATION
+   ============================================================ */
+.count-up {
+  display: inline-block;
+  transition: all 0.05s ease-out;
+}
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}

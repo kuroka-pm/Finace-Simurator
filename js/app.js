@@ -14,6 +14,11 @@ const App = (() => {
     };
 
     function init() {
+        // Show loading screen then dismiss
+        setTimeout(() => {
+            document.getElementById('loading-screen')?.classList.add('hidden');
+        }, 1400);
+
         createParticles();
         setupNavDots();
         setupButtons();
@@ -145,7 +150,31 @@ const App = (() => {
         if (!userState.badges.includes(badgeName)) {
             userState.badges.push(badgeName);
             saveState();
+            showToast(badgeName);
         }
+    }
+
+    // --- Toast Notification ---
+    function showToast(badgeName) {
+        const badge = typeof BADGES !== 'undefined' ? BADGES.find(b => b.name === badgeName) : null;
+        const container = document.getElementById('toast-container');
+        if (!container || !badge) return;
+
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `
+            <div class="toast-icon">${badge.icon}</div>
+            <div class="toast-content">
+                <div class="toast-title">🏅 バッジ獲得！</div>
+                <div class="toast-message">「${badge.name}」をアンロックしました</div>
+            </div>
+        `;
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.add('toast-out');
+            setTimeout(() => toast.remove(), 400);
+        }, 3000);
     }
 
     // --- Confetti ---
@@ -184,7 +213,31 @@ const App = (() => {
         return `¥${Math.round(num).toLocaleString()}`;
     }
 
-    return { init, navigateTo, getState, setState, addBadge, fireConfetti, formatCurrency, formatCurrencyExact, pages };
+    // --- Count-up Animation ---
+    function animateCountUp(element, targetNum, duration, prefix) {
+        const startTime = performance.now();
+        prefix = prefix || '';
+
+        function update(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - (1 - progress) * (1 - progress);
+            const current = Math.round(targetNum * eased);
+
+            if (targetNum >= 10000) {
+                element.textContent = `${prefix}${Math.round(current / 10000)}万円`;
+            } else {
+                element.textContent = `${prefix}${current.toLocaleString()}円`;
+            }
+
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            }
+        }
+        requestAnimationFrame(update);
+    }
+
+    return { init, navigateTo, getState, setState, addBadge, fireConfetti, formatCurrency, formatCurrencyExact, animateCountUp, pages };
 })();
 
 // Initialize on DOM ready

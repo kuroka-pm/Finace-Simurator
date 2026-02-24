@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,9 +14,25 @@
   <link rel="stylesheet" href="css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 </head>
+
 <body>
 
-  <!-- Animated Background Particles -->
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loading-screen">
+    <div class="loading-logo">
+      <div class="loading-icon">💰</div>
+      <div class="loading-text">Finance Simulator</div>
+      <div class="loading-bar-container">
+        <div class="loading-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Animated Background -->
+  <div class="mesh-gradient" id="mesh-gradient"></div>
   <div class="particles" id="particles"></div>
 
   <!-- Navigation Dots -->
@@ -30,9 +47,18 @@
 
   <!-- ===== PAGE 1: LANDING ===== -->
   <section class="page landing active" id="page-landing">
-    <div class="landing-icon">💰</div>
+    <div class="landing-icon">
+      <div class="landing-icon-ring"></div>
+      <span>💰</span>
+    </div>
     <h1>あなたの将来、<br>見てみませんか？</h1>
-    <p class="subtitle">たった1分の無料診断で、複利の力を体感しよう。投資の「怖い」を「楽しい」に変えます。</p>
+    <p class="subtitle">たった1分の無料診断で、複利の力を体感しよう。<br>投資の「怖い」を「楽しい」に変えます。</p>
+    <div class="landing-stats">
+      <div class="stat-item">
+        <span class="stat-number">43.2</span><span class="stat-unit">%</span>
+        <span class="stat-label">が損失を恐れて投資を始められない</span>
+      </div>
+    </div>
 
     <div class="landing-features">
       <div class="feature-item">
@@ -49,12 +75,16 @@
       </div>
     </div>
 
-    <button class="btn-primary" id="btn-start">
-      無料で診断スタート →
+    <button class="btn-primary btn-glow" id="btn-start">
+      <span>無料で診断スタート</span>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="margin-left:4px;">
+        <path d="M4 10h12m-4-4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
     </button>
 
-    <p style="font-size:0.75rem;color:var(--text-tertiary);margin-top:var(--space-sm);">
-      ※ 個人情報の入力は一切不要です
+    <p class="landing-disclaimer">
+      ✅ 個人情報の入力は一切不要 ・ 完全無料
     </p>
   </section>
 
@@ -226,7 +256,8 @@
       </button>
     </div>
 
-    <footer style="text-align:center;margin-top:var(--space-2xl);padding:var(--space-xl) 0;border-top:1px solid var(--glass-border);">
+    <footer
+      style="text-align:center;margin-top:var(--space-2xl);padding:var(--space-xl) 0;border-top:1px solid var(--glass-border);">
       <p style="font-size:0.75rem;color:var(--text-tertiary);line-height:1.8;">
         ※ 本シミュレーションは将来の運用成果を保証するものではありません。<br>
         ※ 投資にはリスクが伴います。余裕資金で行いましょう。<br>
@@ -243,4 +274,5 @@
   <script src="js/education.js"></script>
   <script src="js/quiz.js"></script>
 </body>
+
 </html>
