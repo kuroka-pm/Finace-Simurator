@@ -97,6 +97,8 @@ body {
   line-height: 1.7;
   min-height: 100vh;
   overflow-x: hidden;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 /* --- Scrollbar --- */
@@ -743,7 +745,8 @@ body {
   font-size: 0.95rem;
   text-align: center;
   margin-top: var(--space-sm);
-  max-width: 400px;
+  max-width: 440px;
+  line-height: 1.8;
 }
 
 /* Allocation Chart */
