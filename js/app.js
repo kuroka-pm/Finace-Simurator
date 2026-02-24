@@ -31,8 +31,8 @@ const App = (() => {
         showDailyTip();
         setupSNSShare();
         renderLifeGoals();
-        // Restore state from sessionStorage if exists
-        const saved = sessionStorage.getItem('financeSimState');
+        // Restore state from localStorage if exists
+        const saved = localStorage.getItem('financeSimState');
         if (saved) {
             try { userState = JSON.parse(saved); } catch (e) { }
         }
@@ -213,7 +213,7 @@ const App = (() => {
                 badges: [],
                 worries: []
             };
-            sessionStorage.removeItem('financeSimState');
+            localStorage.removeItem('financeSimState');
             navigateTo('landing');
         });
 
@@ -484,7 +484,7 @@ const App = (() => {
 
     // --- State Management ---
     function saveState() {
-        sessionStorage.setItem('financeSimState', JSON.stringify(userState));
+        localStorage.setItem('financeSimState', JSON.stringify(userState));
     }
 
     function getState() { return userState; }
@@ -587,21 +587,107 @@ const App = (() => {
     // ========================
     // VIRTUAL INVESTMENT
     // ========================
-    let viPortfolio = { cash: 100000, holdings: {}, history: [] };
+    let viPortfolio = { cash: 100000, holdings: {}, history: [], lastVisit: null };
     let viSelectedStock = null;
 
     function initVirtualInvest() {
-        // Load saved state
-        const saved = sessionStorage.getItem('viPortfolio');
+        // Load saved state from localStorage (persistent)
+        const saved = localStorage.getItem('viPortfolio');
         if (saved) try { viPortfolio = JSON.parse(saved); } catch (e) { }
+
+        // Simulate price changes since last visit
+        const now = Date.now();
+        if (viPortfolio.lastVisit) {
+            const elapsed = now - viPortfolio.lastVisit;
+            const daysPassed = elapsed / (1000 * 60 * 60 * 24);
+            if (daysPassed >= 0.01) { // At least ~15 min
+                const oldTotal = calcPortfolioTotal();
+                simulatePriceChanges(daysPassed);
+                const newTotal = calcPortfolioTotal();
+                const diff = newTotal - oldTotal;
+                if (Object.keys(viPortfolio.holdings).length > 0 && Math.abs(diff) > 0) {
+                    showReturnNotification(diff, daysPassed);
+                }
+            }
+        }
+        viPortfolio.lastVisit = now;
+        saveViState();
+
         renderStockGrid();
         updatePortfolioUI();
         renderHoldings();
         renderTradeHistory();
     }
 
+    function simulatePriceChanges(days) {
+        if (typeof VIRTUAL_STOCKS === 'undefined') return;
+        // Volatility per day based on risk level
+        const volatility = { '低': 0.002, '中': 0.008, '中〜高': 0.012, '高': 0.018 };
+        const seed = new Date().toDateString(); // Same seed = same prices for the day
+
+        VIRTUAL_STOCKS.forEach((stock, idx) => {
+            const vol = volatility[stock.risk] || 0.008;
+            // Pseudo-random based on date + stock index for consistency
+            const hash = simpleHash(seed + stock.id + Math.floor(days));
+            const randomFactor = (hash % 1000) / 1000; // 0-1
+            const changePercent = (randomFactor - 0.45) * vol * Math.min(days, 30) * 2;
+            // Slight upward bias for stocks (markets tend to go up long-term)
+            const biasedChange = changePercent + (days * 0.0003);
+
+            const oldPrice = stock.currentPrice;
+            stock.currentPrice = Math.max(
+                oldPrice * 0.5, // Never drop below 50%
+                Math.round(oldPrice * (1 + biasedChange))
+            );
+
+            // Update price history
+            stock.priceHistory.push(stock.currentPrice);
+            if (stock.priceHistory.length > 24) stock.priceHistory.shift();
+        });
+    }
+
+    function simpleHash(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return Math.abs(hash);
+    }
+
+    function calcPortfolioTotal() {
+        let total = viPortfolio.cash;
+        Object.entries(viPortfolio.holdings).forEach(([id, h]) => {
+            const stock = VIRTUAL_STOCKS.find(s => s.id === id);
+            if (stock) total += stock.currentPrice * h.qty;
+        });
+        return total;
+    }
+
+    function showReturnNotification(diff, days) {
+        const isPositive = diff >= 0;
+        const daysText = days >= 1 ? `${Math.floor(days)}日` : `${Math.floor(days * 24)}時間`;
+        const toast = document.createElement('div');
+        toast.className = `vi-toast ${isPositive ? 'vi-toast-positive' : 'vi-toast-negative'}`;
+        toast.innerHTML = `
+            <div class="vi-toast-icon">${isPositive ? '📈' : '📉'}</div>
+            <div class="vi-toast-content">
+                <div class="vi-toast-title">おかえりなさい！（${daysText}ぶり）</div>
+                <div class="vi-toast-msg">ポートフォリオは <strong>${isPositive ? '+' : ''}¥${Math.round(diff).toLocaleString()}</strong> ${isPositive ? '増えました！' : '減りました…'}</div>
+                ${!isPositive ? '<div class="vi-toast-tip">💡 長期保有が大切！焦らず待ちましょう</div>' : '<div class="vi-toast-tip">🎉 この調子！長期投資の力ですね</div>'}
+            </div>`;
+        document.body.appendChild(toast);
+        requestAnimationFrame(() => toast.classList.add('show'));
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 400);
+        }, 5000);
+    }
+
     function saveViState() {
-        sessionStorage.setItem('viPortfolio', JSON.stringify(viPortfolio));
+        viPortfolio.lastVisit = Date.now();
+        localStorage.setItem('viPortfolio', JSON.stringify(viPortfolio));
     }
 
     function renderStockGrid() {
@@ -820,8 +906,8 @@ const App = (() => {
         const challenge = DAILY_CHALLENGES[challengeIndex];
 
         // Load completed challenges
-        const completed = JSON.parse(sessionStorage.getItem('completedChallenges') || '[]');
-        const streakStr = sessionStorage.getItem('challengeStreak') || '0';
+        const completed = JSON.parse(localStorage.getItem('completedChallenges') || '[]');
+        const streakStr = localStorage.getItem('challengeStreak') || '0';
         const streak = parseInt(streakStr);
         const isCompleted = completed.includes(challenge.id);
 
@@ -854,18 +940,18 @@ const App = (() => {
 
     function completeChallenge(challenge, completed) {
         completed.push(challenge.id);
-        sessionStorage.setItem('completedChallenges', JSON.stringify(completed));
+        localStorage.setItem('completedChallenges', JSON.stringify(completed));
 
         // Update streak
-        const lastDate = sessionStorage.getItem('lastChallengeDate');
+        const lastDate = localStorage.getItem('lastChallengeDate');
         const today = new Date().toDateString();
-        let streak = parseInt(sessionStorage.getItem('challengeStreak') || '0');
+        let streak = parseInt(localStorage.getItem('challengeStreak') || '0');
         if (lastDate !== today) {
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
             streak = lastDate === yesterday.toDateString() ? streak + 1 : 1;
-            sessionStorage.setItem('challengeStreak', streak.toString());
-            sessionStorage.setItem('lastChallengeDate', today);
+            localStorage.setItem('challengeStreak', streak.toString());
+            localStorage.setItem('lastChallengeDate', today);
         }
 
         // UI update
