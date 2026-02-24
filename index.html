@@ -31,6 +31,17 @@
   <!-- Toast Notification -->
   <div class="toast-container" id="toast-container"></div>
 
+  <!-- Level Widget (floating) -->
+  <div class="level-widget" id="level-widget">
+    <span class="level-icon" id="level-icon">🌱</span>
+    <div class="level-info">
+      <span class="level-name" id="level-name">Lv.1 投資ビギナー</span>
+      <div class="level-xp-bar">
+        <div class="level-xp-fill" id="level-xp-fill"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- Animated Background -->
   <div class="mesh-gradient" id="mesh-gradient"></div>
   <div class="particles" id="particles"></div>
@@ -86,6 +97,16 @@
       <div class="feature-chip">📊 リアルタイム計算</div>
       <div class="feature-chip">🎮 クイズで学ぶ</div>
       <div class="feature-chip">🏅 バッジ集め</div>
+    </div>
+
+    <!-- Daily Tip -->
+    <div class="daily-tip glass-card" id="daily-tip">
+      <div class="daily-tip-header">
+        <span>💡</span>
+        <span>今日の投資豆知識</span>
+      </div>
+      <p class="daily-tip-text" id="daily-tip-text"></p>
+      <span class="daily-tip-category" id="daily-tip-category"></span>
     </div>
 
     <button class="btn-primary btn-glow btn-large" id="btn-start">
@@ -284,6 +305,18 @@
       </div>
     </div>
 
+    <!-- Life Goals -->
+    <div class="life-goals glass-card">
+      <h3>🎯 あなたの投資、何のため？</h3>
+      <p class="life-goals-intro">目標を決めると、投資がもっと楽しくなります</p>
+      <div class="life-goals-grid" id="life-goals-grid">
+        <!-- Dynamically populated -->
+      </div>
+      <div class="life-goals-result" id="life-goals-result" style="display:none;">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
+
     <!-- Early Start -->
     <div class="early-start-card">
       <h4>⏰ 今日始めた場合 vs 1年後に始めた場合</h4>
@@ -384,6 +417,23 @@
 
     <div class="stories-cta glass-card">
       <p>💡 3人に共通していること：<strong>「まず少額で始めた」</strong></p>
+    </div>
+
+    <!-- SNS Share -->
+    <div class="sns-share glass-card">
+      <h4>📣 結果をシェアしよう！</h4>
+      <p class="sns-share-desc">友達と一緒に投資デビューしよう</p>
+      <div class="sns-buttons">
+        <button class="sns-btn sns-x" id="btn-share-x">
+          𝕏 でシェア
+        </button>
+        <button class="sns-btn sns-line" id="btn-share-line">
+          LINE でシェア
+        </button>
+        <button class="sns-btn sns-copy" id="btn-share-copy">
+          📋 リンクをコピー
+        </button>
+      </div>
     </div>
 
     <button class="btn-primary btn-glow mt-xl" id="btn-to-brokers">

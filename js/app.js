@@ -28,11 +28,15 @@ const App = (() => {
         createParticles();
         setupNavDots();
         setupButtons();
+        showDailyTip();
+        setupSNSShare();
+        renderLifeGoals();
         // Restore state from sessionStorage if exists
         const saved = sessionStorage.getItem('financeSimState');
         if (saved) {
             try { userState = JSON.parse(saved); } catch (e) { }
         }
+        updateLevelWidget();
     }
 
     // --- Typewriter Effect ---
@@ -125,6 +129,7 @@ const App = (() => {
         currentPage = pageName;
         updateNavDots();
         saveState();
+        updateLevelWidget();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -291,6 +296,158 @@ const App = (() => {
         }
     }
 
+    // --- Level System ---
+    function calculateXP() {
+        let xp = 0;
+        if (userState.worries && userState.worries.length > 0) xp += 10;
+        if (userState.riskType !== null) xp += 20;
+        if (userState.educationCompleted) xp += 25;
+        if (userState.quizScore >= 1) xp += 10;
+        if (userState.quizScore >= 3) xp += 15;
+        if (userState.quizScore >= 5) xp += 10;
+        if (userState.badges.length >= 3) xp += 10;
+        return Math.min(xp, 100);
+    }
+
+    function updateLevelWidget() {
+        const xp = calculateXP();
+        let currentLevel = LEVELS[0];
+        for (let i = LEVELS.length - 1; i >= 0; i--) {
+            if (xp >= LEVELS[i].minXP) {
+                currentLevel = LEVELS[i];
+                break;
+            }
+        }
+
+        const nextLevel = LEVELS[Math.min(currentLevel.level, LEVELS.length - 1)];
+        const xpInLevel = xp - currentLevel.minXP;
+        const xpNeeded = nextLevel.minXP - currentLevel.minXP || 100;
+        const progress = currentLevel.level >= 5 ? 100 : Math.round((xpInLevel / xpNeeded) * 100);
+
+        const iconEl = document.getElementById('level-icon');
+        const nameEl = document.getElementById('level-name');
+        const fillEl = document.getElementById('level-xp-fill');
+        if (!iconEl || !nameEl || !fillEl) return;
+
+        iconEl.textContent = currentLevel.icon;
+        nameEl.textContent = `Lv.${currentLevel.level} ${currentLevel.name}`;
+        fillEl.style.width = `${progress}%`;
+        fillEl.style.background = currentLevel.color;
+    }
+
+    // --- Daily Tip ---
+    function showDailyTip() {
+        if (typeof DAILY_TIPS === 'undefined' || !DAILY_TIPS.length) return;
+        const today = new Date();
+        const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+        const tipIndex = dayOfYear % DAILY_TIPS.length;
+        const tip = DAILY_TIPS[tipIndex];
+
+        const textEl = document.getElementById('daily-tip-text');
+        const catEl = document.getElementById('daily-tip-category');
+        if (textEl) textEl.textContent = tip.tip;
+        if (catEl) catEl.textContent = tip.category;
+    }
+
+    // --- Life Goals ---
+    function renderLifeGoals() {
+        const grid = document.getElementById('life-goals-grid');
+        if (!grid || typeof LIFE_GOALS === 'undefined') return;
+
+        grid.innerHTML = LIFE_GOALS.map(goal => `
+            <button class="life-goal-btn" data-goal="${goal.id}" style="--goal-color:${goal.color}">
+                <span class="lg-icon">${goal.icon}</span>
+                <span class="lg-name">${goal.name}</span>
+            </button>
+        `).join('');
+
+        grid.querySelectorAll('.life-goal-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                grid.querySelectorAll('.life-goal-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                showGoalTimeline(btn.dataset.goal);
+            });
+        });
+    }
+
+    function showGoalTimeline(goalId) {
+        const goal = LIFE_GOALS.find(g => g.id === goalId);
+        if (!goal) return;
+
+        const resultEl = document.getElementById('life-goals-result');
+        if (!resultEl) return;
+
+        const monthly = parseInt(document.getElementById('slider-monthly')?.value || 20000);
+        const rate = parseFloat(document.getElementById('slider-rate')?.value || 5);
+        const monthlyRate = rate / 100 / 12;
+
+        // Calculate months needed to reach goal
+        let months = 0;
+        if (monthlyRate > 0) {
+            months = Math.ceil(Math.log(goal.targetAmount * monthlyRate / monthly + 1) / Math.log(1 + monthlyRate));
+        } else {
+            months = Math.ceil(goal.targetAmount / monthly);
+        }
+        const years = Math.floor(months / 12);
+        const remainMonths = months % 12;
+
+        resultEl.style.display = 'block';
+        resultEl.innerHTML = `
+            <div class="goal-result-card" style="border-color:${goal.color}">
+                <div class="goal-result-header">
+                    <span>${goal.icon}</span>
+                    <span>${goal.name}（${goal.description}）</span>
+                </div>
+                <div class="goal-result-target">
+                    目標額: <strong>${(goal.targetAmount / 10000).toLocaleString()}万円</strong>
+                </div>
+                <div class="goal-result-timeline">
+                    月${(monthly / 10000).toFixed(1)}万円 × 年利${rate}% なら…<br>
+                    <strong class="goal-years">${years > 0 ? years + '年' : ''}${remainMonths > 0 ? remainMonths + 'ヶ月' : ''}</strong> で達成！
+                </div>
+            </div>
+        `;
+
+        userState.selectedGoal = goalId;
+        saveState();
+    }
+
+    // --- SNS Share ---
+    function setupSNSShare() {
+        const shareText = () => {
+            const state = userState;
+            const level = LEVELS.find((l, i) => {
+                const xp = calculateXP();
+                const next = LEVELS[i + 1];
+                return !next || xp < next.minXP;
+            });
+            const riskName = state.riskType !== null ? RISK_TYPES[state.riskType]?.name : '';
+            return `投資シミュレーターで${riskName ? '「' + riskName + '」と診断されました！' : '投資の勉強中！'} Lv.${level?.level || 1} ${level?.name || ''} #投資シミュレーター #資産形成`;
+        };
+
+        const appUrl = window.location.href;
+
+        document.getElementById('btn-share-x')?.addEventListener('click', () => {
+            const text = encodeURIComponent(shareText());
+            const url = encodeURIComponent(appUrl);
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+        });
+
+        document.getElementById('btn-share-line')?.addEventListener('click', () => {
+            const text = encodeURIComponent(shareText() + '\n' + appUrl);
+            window.open(`https://social-plugins.line.me/lineit/share?text=${text}`, '_blank');
+        });
+
+        document.getElementById('btn-share-copy')?.addEventListener('click', (e) => {
+            navigator.clipboard.writeText(appUrl).then(() => {
+                const btn = e.currentTarget;
+                const original = btn.textContent;
+                btn.textContent = '✅ コピーしました！';
+                setTimeout(() => { btn.textContent = original; }, 2000);
+            });
+        });
+    }
+
     // --- Background Particles ---
     function createParticles() {
         const container = document.getElementById('particles');
@@ -413,7 +570,7 @@ const App = (() => {
         requestAnimationFrame(update);
     }
 
-    return { init, navigateTo, getState, setState, addBadge, fireConfetti, formatCurrency, formatCurrencyExact, animateCountUp, renderCrashSimulation, updateReadinessMeter, pages };
+    return { init, navigateTo, getState, setState, addBadge, fireConfetti, formatCurrency, formatCurrencyExact, animateCountUp, renderCrashSimulation, updateReadinessMeter, updateLevelWidget, pages };
 })();
 
 // Initialize on DOM ready

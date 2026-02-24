@@ -302,3 +302,88 @@ const BADGES = [
     { name: '資産形成マスター', icon: '🏆', requirement: 'クイズで全問正解', minScore: 5 },
     { name: '未来の投資家', icon: '🚀', requirement: '全コンテンツを体験', minScore: 0 }
 ];
+
+// --- レベルシステム ---
+const LEVELS = [
+    { level: 1, name: '投資ビギナー', icon: '🌱', minXP: 0, color: '#81C784' },
+    { level: 2, name: '勉強中トレーダー', icon: '📚', minXP: 30, color: '#4FC3F7' },
+    { level: 3, name: '知識人インベスター', icon: '🧠', minXP: 60, color: '#FFD54F' },
+    { level: 4, name: '実践派アナリスト', icon: '📈', minXP: 80, color: '#FF8A65' },
+    { level: 5, name: '投資マスター', icon: '👑', minXP: 100, color: '#E57373' }
+];
+
+// --- デイリーチップス（投資豆知識） ---
+const DAILY_TIPS = [
+    { tip: 'S&P500は過去50年で約150倍に成長。長期投資の力！', category: '📈 市場' },
+    { tip: '72の法則：年利÷72＝資産が2倍になる年数。年利6%なら約12年。', category: '🧮 計算' },
+    { tip: 'つみたてNISAは年間120万円まで非課税。使わないと損！', category: '🏛️ NISA' },
+    { tip: '世界最強の投資家バフェットの名言：「市場がオープンしなくても平気な株を買え」', category: '💬 名言' },
+    { tip: 'ドルコスト平均法：定額積立は高い時に少なく、安い時に多く買える仕組み。', category: '📊 戦略' },
+    { tip: '日本の家計金融資産は約2,100兆円。そのうち54%が現金・預金。', category: '🇯🇵 日本' },
+    { tip: 'インデックスファンドは、プロの運用者の9割に勝つと言われています。', category: '📊 データ' },
+    { tip: '「卵を一つのカゴに盛るな」—分散投資の格言。リスクは分けるが鉄則。', category: '💬 名言' },
+    { tip: '毎月1万円を年利5%で30年積み立てると、元本360万円→約832万円に！', category: '🧮 計算' },
+    { tip: '投資信託の運用コスト（信託報酬）は年0.1%台のものを選ぶのがポイント。', category: '💡 コツ' },
+    { tip: 'アメリカでは401k（確定拠出年金）で多くの人が資産形成。日本版はiDeCo。', category: '🌍 世界' },
+    { tip: 'リーマンショック後、S&P500は約4年で完全回復。パニック売りが最大の敵。', category: '📉 歴史' },
+    { tip: '複利の「雪だるま効果」は10年目から加速する。最初の10年は我慢の時期。', category: '⏳ 時間' },
+    { tip: '新NISAの非課税保有限度額は1,800万円。一般家庭にはほぼ十分！', category: '🏛️ NISA' },
+    { tip: '日経平均は2024年にバブル後最高値を更新。35年ぶりの快挙！', category: '🇯🇵 日本' },
+    { tip: '世界人口は増え続け、経済規模も拡大。長期投資は人類の成長に賭けること。', category: '🌍 世界' },
+    { tip: 'アインシュタイン「複利は人類最大の発明」— 時間を味方にしよう。', category: '💬 名言' },
+    { tip: '生活防衛資金（生活費6ヶ月分）を確保してから投資を始めよう。', category: '💡 コツ' },
+    { tip: '投資のリターンの差の80%は「いつ始めたか」で決まると言われる。', category: '⏳ 時間' },
+    { tip: 'ポイント投資なら元手ゼロでスタート可能。楽天ポイントやTポイントが使える。', category: '💡 コツ' }
+];
+
+// --- ライフゴール定義 ---
+const LIFE_GOALS = [
+    {
+        id: 'travel',
+        icon: '✈️',
+        name: '海外旅行',
+        targetAmount: 500000,
+        description: 'ヨーロッパ旅行1回分',
+        color: '#4FC3F7'
+    },
+    {
+        id: 'car',
+        icon: '🚗',
+        name: 'マイカー購入',
+        targetAmount: 2000000,
+        description: '新車の頭金',
+        color: '#81C784'
+    },
+    {
+        id: 'wedding',
+        icon: '💒',
+        name: '結婚資金',
+        targetAmount: 3000000,
+        description: '挙式+新生活準備',
+        color: '#F06292'
+    },
+    {
+        id: 'education',
+        icon: '🎓',
+        name: '教育資金',
+        targetAmount: 5000000,
+        description: '子ども1人の大学費用',
+        color: '#FFD54F'
+    },
+    {
+        id: 'house',
+        icon: '🏠',
+        name: 'マイホーム頭金',
+        targetAmount: 10000000,
+        description: '住宅ローンの頭金',
+        color: '#FF8A65'
+    },
+    {
+        id: 'retirement',
+        icon: '🏖️',
+        name: 'セカンドライフ',
+        targetAmount: 20000000,
+        description: '老後2,000万円問題の解決',
+        color: '#9575CD'
+    }
+];
