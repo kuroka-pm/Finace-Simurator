@@ -587,20 +587,22 @@ const App = (() => {
     // ========================
     // VIRTUAL INVESTMENT
     // ========================
-    let viPortfolio = { cash: 100000, holdings: {}, history: [], lastVisit: null };
+    let viPortfolio = { cash: 100000, holdings: {}, history: [], lastVisit: null, valueHistory: [] };
     let viSelectedStock = null;
+    let viChart = null;
 
     function initVirtualInvest() {
         // Load saved state from localStorage (persistent)
         const saved = localStorage.getItem('viPortfolio');
         if (saved) try { viPortfolio = JSON.parse(saved); } catch (e) { }
+        if (!viPortfolio.valueHistory) viPortfolio.valueHistory = [];
 
         // Simulate price changes since last visit
         const now = Date.now();
         if (viPortfolio.lastVisit) {
             const elapsed = now - viPortfolio.lastVisit;
             const daysPassed = elapsed / (1000 * 60 * 60 * 24);
-            if (daysPassed >= 0.01) { // At least ~15 min
+            if (daysPassed >= 0.01) {
                 const oldTotal = calcPortfolioTotal();
                 simulatePriceChanges(daysPassed);
                 const newTotal = calcPortfolioTotal();
@@ -610,6 +612,9 @@ const App = (() => {
                 }
             }
         }
+
+        // Record portfolio value snapshot
+        recordPortfolioSnapshot();
         viPortfolio.lastVisit = now;
         saveViState();
 
@@ -617,6 +622,94 @@ const App = (() => {
         updatePortfolioUI();
         renderHoldings();
         renderTradeHistory();
+        renderPortfolioChart();
+    }
+
+    function recordPortfolioSnapshot() {
+        const total = calcPortfolioTotal();
+        const now = new Date();
+        const label = `${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+        // Avoid duplicate entries for the same label
+        if (viPortfolio.valueHistory.length > 0 && viPortfolio.valueHistory[viPortfolio.valueHistory.length - 1].label === label) {
+            viPortfolio.valueHistory[viPortfolio.valueHistory.length - 1].value = total;
+        } else {
+            viPortfolio.valueHistory.push({ label, value: total });
+        }
+        // Keep max 50 data points
+        if (viPortfolio.valueHistory.length > 50) viPortfolio.valueHistory.shift();
+    }
+
+    function renderPortfolioChart() {
+        const canvas = document.getElementById('vi-portfolio-chart');
+        if (!canvas || !viPortfolio.valueHistory || viPortfolio.valueHistory.length < 1) return;
+
+        if (viChart) viChart.destroy();
+
+        const labels = viPortfolio.valueHistory.map(h => h.label);
+        const data = viPortfolio.valueHistory.map(h => h.value);
+        const initialValue = 100000;
+        const currentValue = data[data.length - 1] || initialValue;
+        const isPositive = currentValue >= initialValue;
+
+        viChart = new Chart(canvas, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [{
+                    label: '資産総額',
+                    data,
+                    borderColor: isPositive ? '#34D399' : '#F87171',
+                    backgroundColor: isPositive
+                        ? 'rgba(52, 211, 153, 0.1)'
+                        : 'rgba(248, 113, 113, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointBackgroundColor: isPositive ? '#34D399' : '#F87171'
+                }, {
+                    label: '元本 (\u00a5100,000)',
+                    data: labels.map(() => initialValue),
+                    borderColor: 'rgba(255,255,255,0.2)',
+                    borderWidth: 1,
+                    borderDash: [5, 5],
+                    fill: false,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { intersect: false, mode: 'index' },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(15,15,35,0.9)',
+                        titleColor: '#fff',
+                        bodyColor: '#ddd',
+                        borderColor: 'rgba(79,70,229,0.5)',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: ctx => `\u00a5${ctx.parsed.y.toLocaleString()}`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: 'rgba(255,255,255,0.4)', maxTicksLimit: 6, font: { size: 10 } },
+                        grid: { display: false }
+                    },
+                    y: {
+                        ticks: {
+                            color: 'rgba(255,255,255,0.4)',
+                            font: { size: 10 },
+                            callback: v => `\u00a5${(v / 1000).toFixed(0)}k`
+                        },
+                        grid: { color: 'rgba(255,255,255,0.05)' }
+                    }
+                }
+            }
+        });
     }
 
     function simulatePriceChanges(days) {
@@ -804,9 +897,12 @@ const App = (() => {
         });
 
         saveViState();
+        recordPortfolioSnapshot();
+        saveViState();
         updatePortfolioUI();
         renderHoldings();
         renderTradeHistory();
+        renderPortfolioChart();
         document.getElementById('vi-trade-modal').style.display = 'none';
 
         // Achievement

@@ -2849,6 +2849,21 @@ input[type="range"]::-moz-range-thumb {
   margin-bottom: var(--space-md);
 }
 
+/* Portfolio Chart */
+.vi-chart-section {
+  width: 100%;
+}
+
+.vi-chart-section h3 {
+  margin-bottom: var(--space-md);
+}
+
+.vi-chart-container {
+  width: 100%;
+  height: 200px;
+  position: relative;
+}
+
 .vi-stock-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

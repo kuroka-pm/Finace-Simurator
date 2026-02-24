@@ -12,6 +12,11 @@
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4F46E5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="img/icon-192.svg">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 </head>
 
@@ -635,6 +640,14 @@
       </div>
     </div>
 
+    <!-- Portfolio Performance Chart -->
+    <div class="glass-card vi-chart-section">
+      <h3>📈 資産推移</h3>
+      <div class="vi-chart-container">
+        <canvas id="vi-portfolio-chart"></canvas>
+      </div>
+    </div>
+
     <!-- My Holdings -->
     <div class="glass-card vi-holdings-section">
       <h3>💼 保有銘柄</h3>
@@ -741,6 +754,14 @@
   <script src="js/simulator.js"></script>
   <script src="js/education.js"></script>
   <script src="js/quiz.js"></script>
+  <script>
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => { });
+      });
+    }
+  </script>
 </body>
 
 </html>

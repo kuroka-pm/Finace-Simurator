@@ -269,7 +269,7 @@ const BROKERS = [
         rating: 4.8,
         features: ['国内株式手数料 0円〜', 'NISA口座 No.1シェア', '投資信託 2,600本以上', 'Tポイント投資対応'],
         recommended: '総合力No.1。迷ったらここ',
-        url: '#',
+        url: 'https://www.sbisec.co.jp/',
         badge: '👑 人気No.1'
     },
     {
@@ -279,7 +279,7 @@ const BROKERS = [
         rating: 4.7,
         features: ['楽天ポイントで投資可能', '国内株式手数料 0円〜', '楽天カード積立でポイント還元', '投資信託 2,500本以上'],
         recommended: '楽天ユーザーなら最強',
-        url: '#',
+        url: 'https://www.rakuten-sec.co.jp/',
         badge: '💎 ポイントで投資'
     },
     {
@@ -289,7 +289,7 @@ const BROKERS = [
         rating: 4.5,
         features: ['全自動おまかせ運用', '最短1分のプラン診断', '手数料 年1.1%', 'NISA対応'],
         recommended: '完全お任せしたいならこれ',
-        url: '#',
+        url: 'https://www.wealthnavi.com/',
         badge: '🤖 おまかせ運用'
     }
 ];
