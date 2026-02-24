@@ -3339,6 +3339,164 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* ============================================================
+   RESPONSIVE: Mobile Small (≤380px)
+   ============================================================ */
+@media (max-width: 380px) {
+
+  /* Balance amount too large on tiny screens */
+  .vi-balance-amount {
+    font-size: 1.5rem;
+  }
+
+  /* Stats: stack vertically */
+  .vi-stats {
+    grid-template-columns: 1fr;
+    gap: var(--space-xs);
+  }
+
+  .vi-stat {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 0;
+  }
+
+  /* Stock cards: single column */
+  .vi-stock-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Holding items: stack on tiny screens */
+  .vi-holding-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+
+  .vi-holding-values {
+    text-align: left;
+    padding-left: var(--space-xl);
+  }
+
+  /* History readability */
+  .vi-history-item {
+    font-size: 0.72rem;
+    flex-wrap: wrap;
+  }
+
+  .vi-history-detail {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Trade modal tighter */
+  .vi-trade-card {
+    max-width: 100%;
+  }
+
+  .vi-trade-actions {
+    flex-direction: column;
+  }
+
+  /* Chart smaller */
+  .vi-chart-container {
+    height: 160px;
+  }
+
+  /* Daily Challenge compact */
+  .dc-reward {
+    font-size: 0.8rem;
+  }
+
+  .dc-btn {
+    font-size: 0.85rem;
+    padding: 10px;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE: Mobile Medium (≤480px)
+   ============================================================ */
+@media (max-width: 480px) {
+
+  /* Balance */
+  .vi-balance-amount {
+    font-size: 1.6rem;
+    word-break: break-all;
+  }
+
+  /* Stock card text sizes */
+  .vi-stock-name {
+    font-size: 0.75rem;
+  }
+
+  .vi-stock-price {
+    font-size: 0.95rem;
+  }
+
+  /* Nav dots: smaller on mobile */
+  .nav-dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .nav-dot.active {
+    height: 18px;
+  }
+
+  /* Toast notification: don't overflow */
+  .vi-toast {
+    width: calc(100vw - 32px);
+    max-width: 380px;
+  }
+
+  /* Trade modal padding */
+  .vi-trade-modal {
+    padding: var(--space-md);
+  }
+
+  /* Stock grid */
+  .vi-stock-grid {
+    gap: var(--space-sm);
+  }
+
+  .vi-stock-card {
+    padding: var(--space-sm);
+  }
+
+  /* History items: overflow protection */
+  .vi-history-item {
+    gap: var(--space-xs);
+  }
+
+  .vi-history-detail {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .vi-history-amount {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Portfolio chart */
+  .vi-chart-container {
+    height: 180px;
+  }
+
+  /* Broker cards: full width */
+  .broker-card {
+    max-width: 100%;
+  }
+
+  /* Education cards: prevent overflow */
+  .edu-card {
+    min-width: 85vw;
+  }
+}
+
+/* ============================================================
    RETURN NOTIFICATION TOAST
    ============================================================ */
 .vi-toast {
