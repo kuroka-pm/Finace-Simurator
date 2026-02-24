@@ -1603,6 +1603,31 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* ============================================================
+   PR LABEL & AFFILIATE NOTICE (ステマ規制対応)
+   ============================================================ */
+.pr-label {
+  display: inline-block;
+  padding: 4px 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+  align-self: flex-start;
+}
+
+.affiliate-notice {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  margin-top: var(--space-xs);
+  margin-bottom: var(--space-md);
+  line-height: 1.5;
+}
+
+/* ============================================================
    NAV DOTS (Fixed)
    ============================================================ */
 .nav-dots {
